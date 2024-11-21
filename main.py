@@ -29,11 +29,11 @@ def show_packet_info(pkt):
     print("-" * 40)
 
 def main():
-    parser = argparse.ArgumentParser(description="Filtruj pakiety w pliku pcap")
-    parser.add_argument("pcap_file", help="Ścieżka do pliku pcap")
-    parser.add_argument("--ip", help="Adres IP do filtrowania")
-    parser.add_argument("--port", type=int, help="Port do filtrowania")
-    parser.add_argument("--protocol", choices=['tcp', 'udp', 'icmp'], help="Protokół do filtrowania")
+    parser = argparse.ArgumentParser(description="Filter pcap file")
+    parser.add_argument("pcap_file", help="Pcap filepath")
+    parser.add_argument("--ip", help="IP address to filter by")
+    parser.add_argument("--port", type=int, help="Port to filter by")
+    parser.add_argument("--protocol", choices=['tcp', 'udp', 'icmp'], help="Protocol to filter by")
     args = parser.parse_args()
 
     packets = rdpcap(args.pcap_file)
@@ -43,7 +43,7 @@ def main():
         for pkt in filtered_packets:
             show_packet_info(pkt)
     else:
-        print("Brak pakietów spełniających kryteria.")
+        print("No packets matching filters found.")
 
 if __name__ == "__main__":
     main()
