@@ -2,15 +2,15 @@ from scapy.all import rdpcap, IP, TCP, UDP, ICMP
 
 
 def read_packets(pcap_packets):
-    packets = rdpcap(pcap_packets.pcap_file)
-    filtered_packets = filter_packets(
-        packets, ip=pcap_packets.ip, port=pcap_packets.port, protocol=pcap_packets.protocol)
-
-    if filtered_packets:
-        for pkt in filtered_packets:
-            show_packet_info(pkt)
-    else:
-        print("No packets matching filters found.")
+    packets = rdpcap(pcap_packets)
+    packet_data = []
+    for packet in packets:
+        packet_info = {
+            "summary": packet.summary(),
+            "details": str(packet.show(dump=True)),
+        }
+        packet_data.append(packet_info)
+    return packet_data
 
 
 def filter_packets(packets, ip=None, port=None, protocol=None):
