@@ -1,3 +1,5 @@
+# Console interface. To be removed in future versions.
+
 import argparse
 import backend.pcap_reader as pcap_reader
 
