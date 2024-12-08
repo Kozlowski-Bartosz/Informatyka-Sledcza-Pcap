@@ -5,6 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <title>PCAP Viewer: Parsed Packets</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $(".column-filter").on("keyup", function() {
+            var filters = [];
+            $("#data-table tr").each(function() {
+                var row = $(this);
+                var isMatch = true;  // Assume the row matches unless a mismatch is found
+
+                // Gather all filter values and their corresponding column indices
+                $(".column-filter").each(function() {
+                    var index = $(this).parent().index();
+                    var value = $(this).val().toLowerCase();
+                    if (value) {
+                        filters[index] = value;  // Store filter value at its corresponding column index
+                    } else {
+                        filters[index] = null;  // Clear filter for this column if input is empty
+                    }
+                });
+
+                // Check each filter to see if row should be shown or hidden
+                for (var i = 0; i < filters.length; i++) {
+                    if (filters[i]) {
+                        var cellText = row.find('td').eq(i).text().toLowerCase();
+                        if (!cellText.includes(filters[i])) {
+                            isMatch = false;  // Found a mismatch, so mark row as not a match
+                            break;
+                        }
+                    }
+                }
+
+                // Show or hide row based on match result
+                row.toggle(isMatch);
+            });
+        });
+    });
+    </script>
 </head>
 <body>
     <div class="tophead">
@@ -17,24 +54,28 @@
     <div style="text-align: center;">
     <h1>Scapy Parsed Packets</h1>
     <table>
-        <tr>
-            <th>No.</th>
-            <th>Source</th>
-            <th>Destination</th>
-            <th>Protocol</th>
-            <th>Summary</th>
-            <th>Details</th>
-        </tr>
-    {% for packet in packet_data %}
-        <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ packet.source }}</td>
-            <td>{{ packet.destination }}</td>
-            <td>{{ packet.protocol }}</td>
-            <td>{{ packet.summary }}</td>
-            <td>{{ packet.details }}</td>
-        </tr>
-    {% endfor %}
+        <thead>
+            <tr>
+                <th>No. <input type="text" class="column-filter" placeholder="Filter by No."></th>
+                <th>Source <input type="text" class="column-filter" placeholder="Filter by Source"></th>
+                <th>Destination <input type="text" class="column-filter" placeholder="Filter by Destination"></th>
+                <th>Protocol <input type="text" class="column-filter" placeholder="Filter by Protocol"></th>
+                <th>Summary </th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody id="data-table">
+            {% for packet in packet_data %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ packet.source }}</td>
+                <td>{{ packet.destination }}</td>
+                <td>{{ packet.protocol }}</td>
+                <td>{{ packet.summary }}</td>
+                <td>{{ packet.details }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
     </div>
 </body>
