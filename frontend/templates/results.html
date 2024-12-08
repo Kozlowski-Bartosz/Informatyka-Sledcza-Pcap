@@ -8,11 +8,25 @@
 </head>
 <body>
     <h1>Scapy Parsed Packets</h1>
+    <table>
+        <tr>
+            <th>No.</th>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Protocol</th>
+            <th>Summary</th>
+            <th>Details</th>
+        </tr>
     {% for packet in packet_data %}
-        <div class="packet">
-            <p class="summary">Summary: {{ packet.summary }}</p>
-            <p class="details">Details:<br>{{ packet.details }}</p>
-        </div>
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ packet.source }}</td>
+            <td>{{ packet.destination }}</td>
+            <td>{{ packet.protocol }}</td>
+            <td>{{ packet.summary }}</td>
+            <td>{{ packet.details }}</td>
+        </tr>
     {% endfor %}
+    </table>
 </body>
 </html>

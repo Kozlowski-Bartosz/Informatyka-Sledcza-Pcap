@@ -6,6 +6,9 @@ def read_packets(pcap_packets):
     packet_data = []
     for packet in packets:
         packet_info = {
+            "source": packet.sprintf("{IP:%IP.src%}"),
+            "destination": packet.sprintf("{IP:%IP.dst%}"),
+            "protocol": packet.sprintf("{IP:%IP.proto%}"),
             "summary": packet.summary(),
             "details": str(packet.show(dump=True)),
         }
@@ -13,6 +16,7 @@ def read_packets(pcap_packets):
     return packet_data
 
 
+# Currently unused
 def filter_packets(packets, ip=None, port=None, protocol=None):
     def packet_matches(packet):
         if ip and (IP not in packet or (packet[IP].src != ip and packet[IP].dst != ip)):
@@ -30,6 +34,7 @@ def filter_packets(packets, ip=None, port=None, protocol=None):
     return [packet for packet in packets if packet_matches(packet)]
 
 
+# Currently unused
 def show_packet_info(pkt):
     if IP in pkt:
         print(f"IP: {pkt[IP].src} -> {pkt[IP].dst}")
