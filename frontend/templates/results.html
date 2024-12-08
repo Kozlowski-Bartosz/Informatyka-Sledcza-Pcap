@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scapy Parsed Packets</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>PCAP Viewer: Parsed Packets</title>
 </head>
 <body>
+    <div class="tophead">
+        <h1>PCAP Viewer</h1>
+    </div>
     <div class="topnav">
         <a href="/">Home</a>
         <a class="active">Results</a>
     </div> 
+    <div style="text-align: center;">
     <h1>Scapy Parsed Packets</h1>
     <table>
         <tr>
@@ -32,5 +36,6 @@
         </tr>
     {% endfor %}
     </table>
+    </div>
 </body>
 </html>
