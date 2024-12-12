@@ -41,3 +41,10 @@ def results():
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
     data = read_packets(pcap_file_path)
     return render_template('results.html', packet_data=data)
+
+@main_bp.route('/stats', methods=['GET'])
+def stats():
+    current_app.logger.debug("Statistics route")
+    pcap_file_path = session.get('uploaded_pcap_file_path', None)
+    data = read_packets(pcap_file_path)
+    return render_template('stats.html', packet_data=data)
