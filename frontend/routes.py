@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, session, current_app, red
 from werkzeug.utils import secure_filename
 from backend.pcap_reader import read_packets
 from backend.pcap_reader import packets_to_df
-from backend.pcap_reader import plot_pie_png
+from backend.pcap_reader import plot_pie_png_file
 
 import os
 import logging
@@ -44,24 +44,13 @@ def results():
     data = read_packets(pcap_file_path)
     return render_template('results.html', packet_data=data)
 
-
-@main_bp.route('/src_pie.png')
-def src_pie():
-    pcap_file_path = session.get('uploaded_pcap_file_path', None)
-    df = packets_to_df(pcap_file_path)
-    buf = plot_pie_png(df, 'source', 'Top 5 source addresses')
-    return Response(buf, mimetype='image/png')
-
-@main_bp.route('/dst_pie.png')
-def dst_pie():
-    pcap_file_path = session.get('uploaded_pcap_file_path', None)
-    df = packets_to_df(pcap_file_path)
-    buf = plot_pie_png(df, 'destination', 'Top 5 destination addresses')
-    return Response(buf, mimetype='image/png')
-
-
 @main_bp.route('/stats')
 def stats():
+    current_app.logger.debug("Stats route")
+    pcap_file_path = session.get('uploaded_pcap_file_path', None)
+    df = packets_to_df(pcap_file_path)
+    plot_pie_png_file(df, 'source', 'Top 5 source addresses', 'src.png')
+    plot_pie_png_file(df, 'destination', 'Top 5 destination addresses', 'dst.png')
     return render_template('stats.html')
 
 

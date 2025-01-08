@@ -30,9 +30,9 @@ def packets_to_df(pcap_packets):
     df = pd.DataFrame(data)
     return df
 
-# Plot pie chart and save png as BytesIO object
+# Plot pie chart and save png as file
 
-def plot_pie_png(df, column, caption):
+def plot_pie_png_file(df, column, caption, file_name):
     value_counts = df[column].value_counts()
 
     # Define a threshold for grouping marginal values
@@ -52,9 +52,7 @@ def plot_pie_png(df, column, caption):
                             title=caption)
     ax.set_ylabel('')  # Hide the y-axis label
 
-    # Save the plot to a BytesIO object
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    plt.close(fig)  # Close the figure to free memory
-    return buf
+    # Save the plot to a file
+    directory = 'frontend/static/images/' + file_name
+    plt.savefig(directory)
+    plt.close(fig)
