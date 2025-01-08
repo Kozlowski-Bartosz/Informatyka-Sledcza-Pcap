@@ -11,16 +11,13 @@
         <h1>PCAP Viewer</h1>
     </div>
     <div class="topnav">
-        <a class="active">Home</a>
+        <a href="/">Home</a>
         <a href="/results">Results</a>
-        <a href="/stats">Statistics</a>
+        <a class="active">Statistics</a>
     </div> 
     <div style="text-align: center;">
-    <h1>Upload a PCAP File</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".pcap, .cap" required>
-        <input type = "submit" value="Parse PCAP">  
-    </form>
+    <h1>Statistics</h1>
+    <img src="/src_pie.png" alt="Plot">
     </div>
 </body>
 </html>

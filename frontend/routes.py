@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, request, session, current_app, redirect
+from flask import Blueprint, render_template, request, session, current_app, redirect, Response
 from werkzeug.utils import secure_filename
 from backend.pcap_reader import read_packets
+from backend.pcap_reader import packets_to_df
+from backend.pcap_reader import plot_pie_png
+
 import os
 import logging
-
 
 logger = logging.getLogger(__name__)
 
@@ -41,3 +43,14 @@ def results():
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
     data = read_packets(pcap_file_path)
     return render_template('results.html', packet_data=data)
+
+@main_bp.route('/src_pie.png')
+def plot_png():
+    pcap_file_path = session.get('uploaded_pcap_file_path', None)
+    df = packets_to_df(pcap_file_path)
+    buf = plot_pie_png(df, 'source')
+    return Response(buf, mimetype='image/png')
+
+@main_bp.route('/stats')
+def stats():
+    return render_template('stats.html')
