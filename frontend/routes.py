@@ -46,10 +46,17 @@ def results():
 
 
 @main_bp.route('/src_pie.png')
-def plot_png():
+def src_pie():
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
     df = packets_to_df(pcap_file_path)
-    buf = plot_pie_png(df, 'source')
+    buf = plot_pie_png(df, 'source', 'Top 5 source addresses')
+    return Response(buf, mimetype='image/png')
+
+@main_bp.route('/dst_pie.png')
+def dst_pie():
+    pcap_file_path = session.get('uploaded_pcap_file_path', None)
+    df = packets_to_df(pcap_file_path)
+    buf = plot_pie_png(df, 'destination', 'Top 5 destination addresses')
     return Response(buf, mimetype='image/png')
 
 

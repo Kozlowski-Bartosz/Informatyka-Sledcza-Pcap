@@ -25,20 +25,18 @@ def read_packets(pcap_packets):
 
 # Export packets to pandas dataframe
 
-
 def packets_to_df(pcap_packets):
     data = read_packets(pcap_packets)
     df = pd.DataFrame(data)
     return df
 
-# Plot pie chart and generate png
+# Plot pie chart and save png as BytesIO object
 
-
-def plot_pie_png(df, column):
+def plot_pie_png(df, column, caption):
     value_counts = df[column].value_counts()
 
     # Define a threshold for grouping marginal values
-    threshold = 5
+    threshold = 5 # todo: percent value of all packets
 
     # Group marginal values into "Others"
     grouped_counts = value_counts[value_counts >= threshold]
@@ -51,7 +49,7 @@ def plot_pie_png(df, column):
     # Plot as a pie chart
     fig, ax = plt.subplots(figsize=(6, 6))
     grouped_counts.plot.pie(autopct='%1.1f%%', ax=ax,
-                            title="Distribution of Values")
+                            title=caption)
     ax.set_ylabel('')  # Hide the y-axis label
 
     # Save the plot to a BytesIO object
