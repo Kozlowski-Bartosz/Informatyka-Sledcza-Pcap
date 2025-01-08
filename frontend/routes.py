@@ -56,3 +56,8 @@ def plot_png():
 @main_bp.route('/stats')
 def stats():
     return render_template('stats.html')
+
+
+@main_bp.route('/extracted')
+def extracted():
+    return render_template('extracted.html')
