@@ -44,12 +44,14 @@ def results():
     data = read_packets(pcap_file_path)
     return render_template('results.html', packet_data=data)
 
+
 @main_bp.route('/src_pie.png')
 def plot_png():
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
     df = packets_to_df(pcap_file_path)
     buf = plot_pie_png(df, 'source')
     return Response(buf, mimetype='image/png')
+
 
 @main_bp.route('/stats')
 def stats():
