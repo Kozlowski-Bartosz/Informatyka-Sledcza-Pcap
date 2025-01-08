@@ -13,7 +13,6 @@ h1 {
 
 table {
     border-collapse: collapse;
-    width: 100%;
   }
   
 th, td {
@@ -62,4 +61,8 @@ color: black;
 .topnav a.active {
 background-color: #04a2aa;
 color: white;
+}
+
+.column-filter {
+    width:100%;
 }
