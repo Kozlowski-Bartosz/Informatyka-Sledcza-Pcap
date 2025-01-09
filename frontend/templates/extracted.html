@@ -18,10 +18,8 @@
     </div>
     <h1>Extracted URLs from HTTP/S</h1>
     {% for url in url_list %}
-    <tr>
-        <td>{{ url }}</td>
-    </tr>
+    {{ url }}<br>
     {% endfor %}
-
+    <!-- todo: prettify -->
 </body>
 </html>

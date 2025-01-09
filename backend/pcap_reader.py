@@ -90,6 +90,6 @@ def seek_https_requests(pcap_packets):
                     # Extract the server name from the extension
                     server_names = ext.servernames
                     if server_names:
-                        url = "Server Name Indication:", server_names[0].servername.decode()
+                        url = " Server Name Indication (SNI): " + server_names[0].servername.decode()
                         url_list.append(url)
     return url_list
