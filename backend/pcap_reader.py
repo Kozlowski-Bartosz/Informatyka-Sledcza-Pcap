@@ -4,6 +4,7 @@ from scapy.layers.tls.handshake import TLSClientHello
 from scapy.layers.tls.extensions import TLS_Ext_ServerName
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
 
 
 def read_packets(pcap_packets):
@@ -54,6 +55,7 @@ def plot_pie_png_file(df, column, caption, file_name):
         grouped_counts['Others'] = others_count
 
     # Plot as a pie chart
+    matplotlib.use('agg')   # Necessary, not sure about placement. Would be better to call globally?
     fig, ax = plt.subplots(figsize=(6, 6))
     grouped_counts.plot.pie(autopct='%1.1f%%', ax=ax,
                             title=caption)
