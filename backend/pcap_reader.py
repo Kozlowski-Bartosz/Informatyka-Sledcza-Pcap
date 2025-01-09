@@ -1,4 +1,7 @@
 from scapy.all import rdpcap, IP, TCP, UDP, ICMP
+from scapy.layers import http
+from scapy.layers.tls.handshake import TLSClientHello
+from scapy.layers.tls.extensions import TLS_Ext_ServerName
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -58,3 +61,34 @@ def plot_pie_png_file(df, column, caption, file_name):
     directory = 'frontend/static/images/' + file_name
     plt.savefig(directory)
     plt.close(fig)
+
+def seek_https_requests(pcap_packets):
+    url_list = []
+    try:
+        packets = rdpcap(pcap_packets)
+    except AttributeError:
+        return url_list
+
+    for packet in packets:
+        # Processes a TCP packet, and if it contains an HTTP request, it prints it.
+        if packet.haslayer(http.HTTPRequest):    
+            http_layer = packet.getlayer(http.HTTPRequest)
+            ip_layer = packet.getlayer(IP)
+            url = ('\n{} just requested a {} {}{}'.format(
+                ip_layer.fields['src'], 
+                http_layer.fields['Method'].decode('utf-8'), 
+                http_layer.fields['Host'].decode('utf-8'), 
+                http_layer.fields['Path'].decode('utf-8')))
+            url_list.append(url)
+            continue
+        elif packet.haslayer(TLSClientHello):
+        # Iterate through the extensions of the Client Hello packet
+            exts = packet[TLSClientHello].ext
+            for ext in exts:
+                if isinstance(ext, TLS_Ext_ServerName):
+                    # Extract the server name from the extension
+                    server_names = ext.servernames
+                    if server_names:
+                        url = "Server Name Indication:", server_names[0].servername.decode()
+                        url_list.append(url)
+    return url_list

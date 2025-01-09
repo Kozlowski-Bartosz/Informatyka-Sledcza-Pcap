@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 from backend.pcap_reader import read_packets
 from backend.pcap_reader import packets_to_df
 from backend.pcap_reader import plot_pie_png_file
+from backend.pcap_reader import seek_https_requests
 
 import os
 import logging
@@ -56,4 +57,7 @@ def stats():
 
 @main_bp.route('/extracted')
 def extracted():
-    return render_template('extracted.html')
+    current_app.logger.debug("Extracted route")
+    pcap_file_path = session.get('uploaded_pcap_file_path', None)
+    data = seek_https_requests(pcap_file_path)
+    return render_template('extracted.html', url_list=data)
