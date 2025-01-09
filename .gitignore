@@ -2,4 +2,3 @@
 resources/
 __pycache__/
 *.pcap
-output/images/*
