@@ -50,8 +50,10 @@ def stats():
     current_app.logger.debug("Stats route")
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
     df = packets_to_df(pcap_file_path)
-    plot_pie_png_file(df, 'source', 'Top 5 source addresses', 'src.png')
-    plot_pie_png_file(df, 'destination', 'Top 5 destination addresses', 'dst.png')
+    plot_pie_png_file(df, 'source', 'Top source addresses', 'src.png')
+    plot_pie_png_file(df, 'destination', 'Top destination addresses', 'dst.png')
+    plot_pie_png_file(df, 'src_port', 'Top source ports', 'sport.png')
+    plot_pie_png_file(df, 'dst_port', 'Top destination ports', 'dport.png')
     return render_template('stats.html')
 
 
