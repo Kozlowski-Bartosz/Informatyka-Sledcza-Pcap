@@ -140,10 +140,10 @@ def extract_images_from_http(pcap_packets):
                 continue  # Skip unsupported image types
 
             # Save the image
-            image_filename = f"output/images/image_{image_count}.{image_extension}"
-            image_paths.append(image_filename)
-            with open(image_filename, "wb") as image_file:
+            image_path = f"output/images/image_{image_count}.{image_extension}"
+            image_paths.append(image_path)
+            with open(image_path, "wb") as image_file:
                 image_file.write(image_data)
-                print(f"Saved: {image_filename}")
+                print(f"Saved: {image_path}")
                 image_count += 1
     return image_paths
