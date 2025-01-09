@@ -1,7 +1,6 @@
 from scapy.all import rdpcap, IP, TCP, UDP, ICMP
 import pandas as pd
 import matplotlib.pyplot as plt
-import io
 
 
 def read_packets(pcap_packets):
@@ -13,9 +12,12 @@ def read_packets(pcap_packets):
 
     for packet in packets:
         packet_info = {
-            "source": packet.sprintf("{IP:%IP.src%}"),
-            "destination": packet.sprintf("{IP:%IP.dst%}"),
-            "protocol": packet.sprintf("{IP:%IP.proto%}"),
+            "source": packet.sprintf("{ARP:%ARP.hwsrc%}{IP:%IP.src%}"),
+            "destination": packet.sprintf("{ARP:%ARP.hwdst%}{IP:%IP.dst%}"),
+            "protocol": packet.sprintf("{ARP:arp}{IP:%IP.proto%}"),
+            "src_port": packet.sprintf("{TCP:%r,TCP.sport%}{UDP:%r,UDP.sport%}{QUIC:%r,QUIC.sport%}"),
+            "dst_port": packet.sprintf("{TCP:%r,TCP.dport%}{UDP:%r,UDP.dport%}{QUIC:%r,QUIC.dport%}"),
+            "flags": packet.sprintf("{TCP:%TCP.flags%}"),
             "summary": packet.summary(),
             "details": str(packet.show(dump=True)),
         }

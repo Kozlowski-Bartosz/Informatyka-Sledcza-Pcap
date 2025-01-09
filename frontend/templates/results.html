@@ -61,8 +61,11 @@
             <col span="1" style="min-width:150px; width: 7.5%;">
             <col span="1" style="min-width:180px; width: 7.5%;">
             <col span="1" style="min-width:80px; width: 5%;">
+            <col span="1" style="min-width:80px; width: 6%;">
+            <col span="1" style="min-width:80px; width: 6%;">
+            <col span="1" style="min-width:80px; width: 5%;">
             <col span="1" style="min-width:150px; width: 15%;">
-            <col span="1" style="width: 60%;">
+            <col span="1" style="width: 48%;">
          </colgroup>
         <thead>
             <tr>
@@ -70,6 +73,9 @@
                 <th>Source <input type="text" class="column-filter" placeholder="Filter"></th>
                 <th>Destination <input type="text" class="column-filter" placeholder="Filter"></th>
                 <th>Protocol <input type="text" class="column-filter" placeholder="Filter"></th>
+                <th>Source port <input type="text" class="column-filter" placeholder="Filter"></th>
+                <th>Destination port <input type="text" class="column-filter" placeholder="Filter"></th>
+                <th>Flags <input type="text" class="column-filter" placeholder="Filter"></th>
                 <th>Summary </th>
                 <th>Details</th>
             </tr>
@@ -81,6 +87,9 @@
                 <td>{{ packet.source }}</td>
                 <td>{{ packet.destination }}</td>
                 <td>{{ packet.protocol }}</td>
+                <td>{{ packet.src_port }}</td>
+                <td>{{ packet.dst_port }}</td>
+                <td>{{ packet.flags }}</td>
                 <td>{{ packet.summary }}</td>
                 <td>{{ packet.details }}</td>
             </tr>
