@@ -1,9 +1,12 @@
 from flask import Blueprint, render_template, request, session, current_app, redirect, Response
 from werkzeug.utils import secure_filename
-from backend.pcap_reader import read_packets
-from backend.pcap_reader import packets_to_df
-from backend.pcap_reader import plot_pie_png_file
-from backend.pcap_reader import seek_https_requests
+from backend.pcap_reader import (
+    read_packets,
+    packets_to_df,
+    plot_pie_png_file,
+    seek_https_requests,
+    extract_images_from_http
+)
 
 import os
 import logging
@@ -45,6 +48,7 @@ def results():
     data = read_packets(pcap_file_path)
     return render_template('results.html', packet_data=data)
 
+
 @main_bp.route('/stats')
 def stats():
     current_app.logger.debug("Stats route")
@@ -61,5 +65,6 @@ def stats():
 def extracted():
     current_app.logger.debug("Extracted route")
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
-    data = seek_https_requests(pcap_file_path)
-    return render_template('extracted.html', url_list=data)
+    http_request_data = seek_https_requests(pcap_file_path)
+    images = extract_images_from_http(pcap_file_path)
+    return render_template('extracted.html', url_list=http_request_data, image_filenames=images)
