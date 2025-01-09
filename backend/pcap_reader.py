@@ -16,6 +16,7 @@ def read_packets(pcap_packets):
 
     for packet in packets:
         packet_info = {
+            "timestamp": packet.time,
             "source": packet.sprintf("{ARP:%ARP.hwsrc%}{IP:%IP.src%}"),
             "destination": packet.sprintf("{ARP:%ARP.hwdst%}{IP:%IP.dst%}"),
             "protocol": packet.sprintf("{ARP:arp}{IP:%IP.proto%}"),
