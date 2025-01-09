@@ -1,4 +1,4 @@
-from scapy.all import rdpcap, IP, TCP, UDP, ICMP
+from scapy.all import rdpcap, IP, TCP, UDP, ICMP, load_layer
 from scapy.layers import http
 from scapy.layers.tls.handshake import TLSClientHello
 from scapy.layers.tls.extensions import TLS_Ext_ServerName
@@ -63,6 +63,7 @@ def plot_pie_png_file(df, column, caption, file_name):
     plt.close(fig)
 
 def seek_https_requests(pcap_packets):
+    load_layer("tls")
     url_list = []
     try:
         packets = rdpcap(pcap_packets)
