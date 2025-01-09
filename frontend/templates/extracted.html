@@ -21,10 +21,11 @@
     {{ url }}<br>
     {% endfor %}
     <h1>Extracted Images</h1>
+    <div class="gallery">
     {% for image_filename in image_filenames %}
-    {{ image_filename }}<br>
+    <img src="{{ url_for('main.output_images', filename=image_filename.split('/')[-1]) }}" alt="Extracted Image" style="max-width: 500px; padding: 20px; background:#ddd">
     {% endfor %}
+    </div>
     <!-- todo: prettify -->
-    <!-- todo: actually display the images -->
 </body>
 </html>

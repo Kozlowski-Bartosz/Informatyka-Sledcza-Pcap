@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, current_app, redirect, Response
+from flask import Blueprint, render_template, request, session, current_app, redirect, Response, send_file
 from werkzeug.utils import secure_filename
 from backend.pcap_reader import (
     read_packets,
@@ -68,3 +68,12 @@ def extracted():
     http_request_data = seek_https_requests(pcap_file_path)
     images = extract_images_from_http(pcap_file_path)
     return render_template('extracted.html', url_list=http_request_data, image_filenames=images)
+
+
+# Required to import images from outside the static folder
+@main_bp.route('/output/images/<path:filename>')
+def output_images(filename):
+    path = os.path.abspath(f"output/images/{filename}")
+    if os.path.exists(path):
+        response = send_file(path)
+    return response
