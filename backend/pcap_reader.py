@@ -1,4 +1,4 @@
-from scapy.all import rdpcap, IP, TCP, UDP, ICMP, load_layer
+from scapy.all import rdpcap, IP, TCP, UDP, ICMP, load_layer, Raw
 from scapy.layers import http
 from scapy.layers.tls.handshake import TLSClientHello
 from scapy.layers.tls.extensions import TLS_Ext_ServerName
@@ -30,6 +30,7 @@ def read_packets(pcap_packets):
 
 # Export packets to pandas dataframe
 
+
 def packets_to_df(pcap_packets):
     data = read_packets(pcap_packets)
     df = pd.DataFrame(data)
@@ -37,11 +38,12 @@ def packets_to_df(pcap_packets):
 
 # Plot pie chart and save png as file
 
+
 def plot_pie_png_file(df, column, caption, file_name):
     value_counts = df[column].value_counts()
 
     # Define a threshold for grouping marginal values
-    threshold = 5 # todo: percent value of all packets
+    threshold = 5  # todo: percent value of all packets
 
     # Group marginal values into "Others"
     grouped_counts = value_counts[value_counts >= threshold]
@@ -62,6 +64,7 @@ def plot_pie_png_file(df, column, caption, file_name):
     plt.savefig(directory)
     plt.close(fig)
 
+
 def seek_https_requests(pcap_packets):
     load_layer("tls")
     url_list = []
@@ -72,24 +75,73 @@ def seek_https_requests(pcap_packets):
 
     for packet in packets:
         # Processes a TCP packet, and if it contains an HTTP request, it prints it.
-        if packet.haslayer(http.HTTPRequest):    
+        if packet.haslayer(http.HTTPRequest):
             http_layer = packet.getlayer(http.HTTPRequest)
             ip_layer = packet.getlayer(IP)
             url = ('\n{} just requested a {} {}{}'.format(
-                ip_layer.fields['src'], 
-                http_layer.fields['Method'].decode('utf-8'), 
-                http_layer.fields['Host'].decode('utf-8'), 
+                ip_layer.fields['src'],
+                http_layer.fields['Method'].decode('utf-8'),
+                http_layer.fields['Host'].decode('utf-8'),
                 http_layer.fields['Path'].decode('utf-8')))
             url_list.append(url)
             continue
         elif packet.haslayer(TLSClientHello):
-        # Iterate through the extensions of the Client Hello packet
+            # Iterate through the extensions of the Client Hello packet
             exts = packet[TLSClientHello].ext
             for ext in exts:
                 if isinstance(ext, TLS_Ext_ServerName):
                     # Extract the server name from the extension
                     server_names = ext.servernames
                     if server_names:
-                        url = " Server Name Indication (SNI): " + server_names[0].servername.decode()
+                        url = " Server Name Indication (SNI): " + \
+                            server_names[0].servername.decode()
                         url_list.append(url)
     return url_list
+
+
+def extract_images_from_http(pcap_packets):
+    # I'd like to make this more readable
+    image_count = 0
+    image_paths = []
+    try:
+        packets = rdpcap(pcap_packets)
+        sessions = packets.sessions()
+    except AttributeError:
+        return image_paths
+
+    for session in sessions.values():
+        http_payload = b""
+        tcp_packets = []
+
+        for packet in session:
+            if packet.haslayer('HTTP'):
+                tcp_packets.append(packet)
+
+        for packet in tcp_packets:
+            if hasattr(packet[TCP], 'payload'):
+                http_payload += bytes(packet[TCP].payload)
+
+        if b"Content-Type: image" in http_payload:
+            # Find the start of the image data
+            headers_end = http_payload.find(b"\r\n\r\n") + 4
+            image_data = http_payload[headers_end:]
+
+            if b"image/jpeg" in http_payload:
+                image_extension = "jpg"
+            elif b"image/png" in http_payload:
+                image_extension = "png"
+            elif b"image/gif" in http_payload:
+                image_extension = "gif"
+            elif b"image/bmp" in http_payload:
+                image_extension = "bmp"
+            else:
+                continue  # Skip unsupported image types
+
+            # Save the image
+            image_filename = f"output/images/image_{image_count}.{image_extension}"
+            image_paths.append(image_filename)
+            with open(image_filename, "wb") as image_file:
+                image_file.write(image_data)
+                print(f"Saved: {image_filename}")
+                image_count += 1
+    return image_paths
