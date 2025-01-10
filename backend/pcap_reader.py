@@ -75,6 +75,9 @@ def plot_pie_png_file(df, column, caption, file_name):
                             title=caption)
     ax.set_ylabel('')  # Hide the y-axis label
 
+    # Prevent label cropping
+    plt.tight_layout()
+
     # Save the plot to a file
     directory = 'frontend/static/images/' + file_name
     plt.savefig(directory)
