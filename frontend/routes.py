@@ -5,7 +5,8 @@ from backend.pcap_reader import (
     packets_to_df,
     plot_pie_png_file,
     seek_https_requests,
-    extract_images_from_http
+    extract_images_from_http,
+    pcap_statistics
 )
 
 import os
@@ -54,11 +55,12 @@ def stats():
     current_app.logger.debug("Stats route")
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
     df = packets_to_df(pcap_file_path)
+    stats = pcap_statistics(df)
     plot_pie_png_file(df, 'source', 'Top source addresses', 'src.png')
     plot_pie_png_file(df, 'destination', 'Top destination addresses', 'dst.png')
     plot_pie_png_file(df, 'src_port', 'Top source ports', 'sport.png')
     plot_pie_png_file(df, 'dst_port', 'Top destination ports', 'dport.png')
-    return render_template('stats.html')
+    return render_template('stats.html', pcap_stats = stats)
 
 
 @main_bp.route('/extracted')

@@ -40,9 +40,13 @@ def packets_to_df(pcap_packets):
 
 # Take stats from pcap file
 
-def statistics(df):
+def pcap_statistics(df):
+    duration = df['timestamp'].iloc[-1] - df['timestamp'].iloc[0]
+    count = df.shape[0]
     stats = {
-        "pcap_duration": df['timestamp'].iloc[-1] - df['timestamp'].iloc[0],
+        "pcap_duration": duration,
+        "packets_count": count,
+        "pps": round(count / duration, 2),
         "first_packet_time": datetime.fromtimestamp(float(df['timestamp'].iloc[0])).strftime('%Y-%m-%d %H:%M:%S'),
         "last_packet_time": datetime.fromtimestamp(float(df['timestamp'].iloc[-1])).strftime('%Y-%m-%d %H:%M:%S')
     }
