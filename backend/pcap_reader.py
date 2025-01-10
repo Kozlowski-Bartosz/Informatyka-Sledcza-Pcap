@@ -2,6 +2,7 @@ from scapy.all import rdpcap, IP, TCP, UDP, ICMP, load_layer, Raw
 from scapy.layers import http
 from scapy.layers.tls.handshake import TLSClientHello
 from scapy.layers.tls.extensions import TLS_Ext_ServerName
+from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
@@ -32,14 +33,22 @@ def read_packets(pcap_packets):
 
 # Export packets to pandas dataframe
 
-
 def packets_to_df(pcap_packets):
     data = read_packets(pcap_packets)
     df = pd.DataFrame(data)
     return df
 
-# Plot pie chart and save png as file
+# Take stats from pcap file
 
+def statistics(df):
+    stats = {
+        "pcap_duration": df['timestamp'].iloc[-1] - df['timestamp'].iloc[0],
+        "first_packet_time": datetime.fromtimestamp(float(df['timestamp'].iloc[0])).strftime('%Y-%m-%d %H:%M:%S'),
+        "last_packet_time": datetime.fromtimestamp(float(df['timestamp'].iloc[-1])).strftime('%Y-%m-%d %H:%M:%S')
+    }
+    return stats
+
+# Plot pie chart and save png as file
 
 def plot_pie_png_file(df, column, caption, file_name):
     value_counts = df[column].value_counts()
