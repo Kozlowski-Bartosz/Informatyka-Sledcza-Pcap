@@ -5,9 +5,9 @@ from backend.pcap_reader import (
     packets_to_df,
     plot_pie_png_file,
     seek_https_requests,
-    extract_images_from_http,
     pcap_statistics
 )
+from backend.extractor import extract_images_from_http
 
 import os
 import logging
