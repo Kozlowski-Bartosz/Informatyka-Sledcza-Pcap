@@ -1,4 +1,5 @@
 from scapy.all import rdpcap, TCP
+import re
 
 # list taken from net-creds, which in turn based it off of PCredz
 USERFIELDS = ['log','login', 'wpname', 'ahd_username', 'unickname', 'nickname', 'user', 'user_name',
@@ -21,9 +22,9 @@ def extract_images_from_http(pcap_packets):
 
     for session in sessions.values():
         http_payload = b""
-        tcp_packets = [packet for packet in session if packet.haslayer('HTTP')]
+        http_packets = [packet for packet in session if packet.haslayer('HTTP')]
 
-        for packet in tcp_packets:
+        for packet in http_packets:
             if hasattr(packet[TCP], 'payload'):
                 http_payload += bytes(packet[TCP].payload)
 
@@ -51,3 +52,32 @@ def extract_images_from_http(pcap_packets):
                 print(f"Saved: {image_path}")
                 image_count += 1
     return image_paths
+
+def extract_authentication_data_from_http(pcap_packets):
+    username_list, password_list = [], []
+    body = ""
+
+    try:
+        packets = rdpcap(pcap_packets)
+        # sessions = packets.sessions()
+    except AttributeError:
+        return username_list, password_list
+    
+    http_packets = [packet for packet in packets if packet.haslayer('HTTP')]
+    
+    for packet in http_packets:
+        body += bytes(packet[TCP].payload).decode('UTF8','replace')
+        # Are the credentials even in there? Can't find a single pcap file with passwords...
+
+
+
+    for ufield in USERFIELDS:
+        username = re.search('(%s=[^&]+)' % ufield, body, re.IGNORECASE)
+        if username:
+            username_list.append(username.group())
+    
+    for pfield in PASSFIELDS:
+        password = re.search('(%s=[^&]+)' % pfield, body, re.IGNORECASE)
+        if password:
+            password_list.append(password.group())
+    return zip(username_list, password_list)

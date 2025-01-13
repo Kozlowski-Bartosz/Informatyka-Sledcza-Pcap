@@ -7,7 +7,10 @@ from backend.pcap_reader import (
     seek_https_requests,
     pcap_statistics
 )
-from backend.extractor import extract_images_from_http
+from backend.extractor import (
+    extract_images_from_http,
+    extract_authentication_data_from_http
+)
 
 import os
 import logging
@@ -69,7 +72,8 @@ def extracted():
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
     http_request_data = seek_https_requests(pcap_file_path)
     images = extract_images_from_http(pcap_file_path)
-    return render_template('extracted.html', url_list=http_request_data, image_filenames=images)
+    cred = extract_authentication_data_from_http(pcap_file_path)
+    return render_template('extracted.html', url_list=http_request_data, image_filenames=images, cred=cred)
 
 
 # Required to import images from outside the static folder

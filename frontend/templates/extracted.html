@@ -20,6 +20,18 @@
     {% for url in url_list %}
     {{ url }}<br>
     {% endfor %}
+    <h1>Extracted credentials</h1>
+    {% for cred in cred_list %}
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Password</th>
+        </tr>
+        <tr>
+            <td>{{ cred[0] }}</td>
+            <td>{{ cred[1] }}</td>
+        </tr>
+    {%endfor%}
     <h1>Extracted Images</h1>
     <div class="gallery">
     {% for image_filename in image_filenames %}
