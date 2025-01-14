@@ -54,7 +54,7 @@ def pcap_statistics(df):
 
 def plot_pie_png_file(df, column, caption, file_name):
     value_counts = df[column].value_counts()
-    threshold = 5
+    threshold = 5 # TODO: Percent values of all packets for improved readability
     grouped_counts = value_counts[value_counts >= threshold]
     others_count = value_counts[value_counts < threshold].sum()
     if others_count > 0:
@@ -76,6 +76,7 @@ def seek_https_requests(pcap_packets):
     except AttributeError:
         return url_list
 
+# TODO better result output
     for packet in packets:
         if packet.haslayer(http.HTTPRequest):
             http_layer = packet.getlayer(http.HTTPRequest)
