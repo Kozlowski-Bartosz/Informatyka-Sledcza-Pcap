@@ -1,17 +1,5 @@
 from scapy.all import rdpcap, TCP
-from scapy.layers import http
 from base64 import b64decode
-import re
-
-# list taken from net-creds, which in turn based it off of PCredz
-USERFIELDS = ['log','login', 'wpname', 'ahd_username', 'unickname', 'nickname', 'user', 'user_name',
-             'alias', 'pseudo', 'email', 'username', '_username', 'userid', 'form_loginname', 'loginname',
-             'login_id', 'loginid', 'session_key', 'sessionkey', 'pop_login', 'uid', 'id', 'user_id', 'screename',
-             'uname', 'ulogin', 'acctname', 'account', 'member', 'mailaddress', 'membername', 'login_username',
-             'login_email', 'loginusername', 'loginemail', 'uin', 'sign-in', 'usuario']
-PASSFIELDS = ['ahd_password', 'pass', 'password', '_password', 'passwd', 'session_password', 'sessionpassword', 
-             'login_password', 'loginpassword', 'form_pw', 'pw', 'userpassword', 'pwd', 'upassword', 'login_password'
-             'passwort', 'passwrd', 'wppassword', 'upasswd','senha','contrasena']
 
 def extract_images_from_http(pcap_packets):
     image_count = 0
@@ -85,15 +73,4 @@ def extract_authentication_data_from_http(pcap_packets):
                     type_list.append("Digest")
                     cred_list.append(auth[7:].decode())
 
-
-
-    # for ufield in USERFIELDS:
-    #     username = re.search('(%s=[^&]+)' % ufield, body, re.IGNORECASE)
-    #     if username:
-    #         username_list.append(username.group())
-    
-    # for pfield in PASSFIELDS:
-    #     password = re.search('(%s=[^&]+)' % pfield, body, re.IGNORECASE)
-    #     if password:
-    #         password_list.append(password.group())
     return list(zip(type_list, cred_list))
