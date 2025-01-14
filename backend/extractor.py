@@ -78,12 +78,12 @@ def extract_authentication_data_from_http(pcap_packets):
             if auth:
                 print(auth)
                 if auth.startswith(b"Basic"):
-                    auth = b64decode(auth[6:]).decode()
-                    cred_list.append(auth)
+                    type_list.append("Basic")
+                    cred_list.append(b64decode(auth[6:]).decode())
                 elif auth.startswith(b"Digest"):
                     print(f"Digest Auth: {auth}")
                     type_list.append("Digest")
-                    cred_list.append(auth)
+                    cred_list.append(auth[7:].decode())
 
 
 
