@@ -73,7 +73,7 @@ def extracted():
     http_request_data = seek_https_requests(pcap_file_path)
     images = extract_images_from_http(pcap_file_path)
     cred = extract_authentication_data_from_http(pcap_file_path)
-    return render_template('extracted.html', url_list=http_request_data, image_filenames=images, cred=cred)
+    return render_template('extracted.html', url_list=http_request_data, image_filenames=images, cred_list=cred)
 
 
 # Required to import images from outside the static folder

@@ -1,4 +1,6 @@
 from scapy.all import rdpcap, TCP
+from scapy.layers import http
+from base64 import b64decode
 import re
 
 # list taken from net-creds, which in turn based it off of PCredz
@@ -60,30 +62,38 @@ def extract_images_from_http(pcap_packets):
     return image_paths
 
 def extract_authentication_data_from_http(pcap_packets):
-    username_list, password_list = [], []
-    body = ""
+    type_list, cred_list = [], []
 
     try:
         packets = rdpcap(pcap_packets)
-        # sessions = packets.sessions()
     except AttributeError:
-        return username_list, password_list
+        return type_list, cred_list
     
     http_packets = [packet for packet in packets if packet.haslayer('HTTP')]
-    
+
     for packet in http_packets:
-        body += bytes(packet[TCP].payload).decode('UTF8','replace')
-        # Are the credentials even in there? Can't find a single pcap file with passwords...
+        http_pkt = packet.getlayer("HTTP Request")
+        if http_pkt:
+            auth = http_pkt.Authorization
+            if auth:
+                print(auth)
+                if auth.startswith(b"Basic"):
+                    auth = b64decode(auth[6:]).decode()
+                    cred_list.append(auth)
+                elif auth.startswith(b"Digest"):
+                    print(f"Digest Auth: {auth}")
+                    type_list.append("Digest")
+                    cred_list.append(auth)
 
 
 
-    for ufield in USERFIELDS:
-        username = re.search('(%s=[^&]+)' % ufield, body, re.IGNORECASE)
-        if username:
-            username_list.append(username.group())
+    # for ufield in USERFIELDS:
+    #     username = re.search('(%s=[^&]+)' % ufield, body, re.IGNORECASE)
+    #     if username:
+    #         username_list.append(username.group())
     
-    for pfield in PASSFIELDS:
-        password = re.search('(%s=[^&]+)' % pfield, body, re.IGNORECASE)
-        if password:
-            password_list.append(password.group())
-    return zip(username_list, password_list)
+    # for pfield in PASSFIELDS:
+    #     password = re.search('(%s=[^&]+)' % pfield, body, re.IGNORECASE)
+    #     if password:
+    #         password_list.append(password.group())
+    return list(zip(type_list, cred_list))
