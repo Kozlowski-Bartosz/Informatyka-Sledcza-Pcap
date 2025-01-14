@@ -18,6 +18,8 @@ def extract_images_from_http(pcap_packets):
             if hasattr(packet[TCP], 'payload'):
                 http_payload += bytes(packet[TCP].payload)
 
+        payload_start = http_payload.find(b"Content-Type: image")
+        http_payload = http_payload[payload_start:]
         images_found = http_payload.count(b"Content-Type: image")
 
         for i in range(images_found):
