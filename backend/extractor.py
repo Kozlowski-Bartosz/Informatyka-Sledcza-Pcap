@@ -28,7 +28,9 @@ def extract_images_from_http(pcap_packets):
             if hasattr(packet[TCP], 'payload'):
                 http_payload += bytes(packet[TCP].payload)
 
-        if b"Content-Type: image" in http_payload:
+        images_found = http_payload.count(b"Content-Type: image")
+
+        for i in range(images_found):
             headers_end = http_payload.find(b"\r\n\r\n") + 4
             image_data = http_payload[headers_end:]
 
@@ -51,6 +53,10 @@ def extract_images_from_http(pcap_packets):
                 image_file.write(image_data)
                 print(f"Saved: {image_path}")
                 image_count += 1
+
+            # Search for the next image in session
+            http_payload = http_payload[http_payload.find(b"\r\n\r\n") + 4:]
+
     return image_paths
 
 def extract_authentication_data_from_http(pcap_packets):
