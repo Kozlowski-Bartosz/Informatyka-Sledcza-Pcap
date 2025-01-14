@@ -51,15 +51,12 @@ def extract_images_from_http(pcap_packets):
 
 def extract_authentication_data_from_http(pcap_packets):
     type_list, cred_list = [], []
-
     try:
         packets = rdpcap(pcap_packets)
     except AttributeError:
         return type_list, cred_list
     
-    http_packets = [packet for packet in packets if packet.haslayer('HTTP')]
-
-    for packet in http_packets:
+    for packet in packets:
         http_pkt = packet.getlayer("HTTP Request")
         if http_pkt:
             auth = http_pkt.Authorization
