@@ -22,7 +22,8 @@ def extract_images_from_http(pcap_packets):
 
         for i in range(images_found):
             headers_end = http_payload.find(b"\r\n\r\n") + 4
-            image_data = http_payload[headers_end:]
+            packet_end = http_payload.find(b"HTTP/", headers_end)
+            image_data = http_payload[headers_end:packet_end]
 
             if b"image/jpeg" in http_payload:
                 image_extension = "jpg"
@@ -45,7 +46,7 @@ def extract_images_from_http(pcap_packets):
                 image_count += 1
 
             # Search for the next image in session
-            http_payload = http_payload[http_payload.find(b"\r\n\r\n") + 4:]
+            http_payload = http_payload[packet_end:]
 
     return image_paths
 
