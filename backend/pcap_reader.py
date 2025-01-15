@@ -67,6 +67,17 @@ def plot_pie_png_file(df, column, caption, file_name):
     plt.savefig(f'frontend/static/images/{file_name}')
     plt.close(fig)
 
+def info_tables(df):
+    # Count occurrences and convert to DataFrame
+    dst_port_count = df['dst_port'].value_counts().reset_index()
+    dst_port_count.columns = ['Port Number', 'Count']  # Rename columns
+
+    # Sort the DataFrame by 'Count' in descending order
+    dst_port_count = dst_port_count.sort_values(by='Count', ascending=False)
+    dst_port_list = dst_port_count.to_dict(orient='records')
+
+    return dst_port_list
+
 
 def seek_https_requests(pcap_packets):
     load_layer("tls")
