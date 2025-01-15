@@ -53,7 +53,7 @@
         });
         
         $.post('/save', {data: visibleRowsData.join('\n')}, function(response) {
-            alert('Data saved successfully!');
+            alert('Data saved successfully to output/results/filtered_packets.txt');
         });
     });
 });

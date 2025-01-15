@@ -91,6 +91,6 @@ def output_images(filename):
 @main_bp.route('/save', methods=['POST'])
 def save_visible_rows():
     data = request.form['data']
-    with open('output/results/visible_rows.txt', 'w') as file:
+    with open('output/results/filtered_packets.txt', 'w') as file:
         file.write(data)
     return 'OK'
