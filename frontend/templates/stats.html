@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <style>
+        .tables-wrapper {
+            display: flex;
+            justify-content: space-around; /* This distributes space around the items */
+            align-items: flex-start; /* Aligns items at the top of the container */
+        }
         .table-container {
-            width: 45%; /* Set the width of the container to 50% of its parent */
+            width: 30%; /* Set the width of the container to 50% of its parent */
             height: 400px; /* Fixed height of the container */
             overflow: auto; /* Adds scrollbars when necessary */
-            margin: auto; /* Center the table container horizontally */
+            margin: 20px; /* Center the table container horizontally */
         }
         table {
             width: 100%; /* Full width of the container */
@@ -49,20 +54,40 @@
         <img src="static/images/dport.png" alt="Destination ports plot">
         
         <h1>Tables</h1>
-        <h2>Port Usage Counts</h2>
-        <div class="table-container">
-            <table>
-                <tr>
-                    <th>Port Number</th>
-                    <th>Count</th>
-                </tr>
-                {% for port in dst_port_list %}
-                <tr>
-                    <td>{{ port['Port Number'] }}</td>
-                    <td>{{ port['Count'] }}</td>
-                </tr>
-                {% endfor %}
-            </table>
+        <div class="tables-wrapper">
+            <h2>Source Port Usage</h2>
+            <h2>Destination Port Usage</h2>
+        </div>
+        <div class="tables-wrapper">
+            
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Port Number</th>
+                        <th>Count</th>
+                    </tr>
+                    {% for port in src_port_list %}
+                    <tr>
+                        <td>{{ port['Port Number'] }}</td>
+                        <td>{{ port['Count'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Port Number</th>
+                        <th>Count</th>
+                    </tr>
+                    {% for port in dst_port_list %}
+                    <tr>
+                        <td>{{ port['Port Number'] }}</td>
+                        <td>{{ port['Count'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
 </body>

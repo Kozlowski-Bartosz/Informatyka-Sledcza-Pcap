@@ -69,15 +69,18 @@ def plot_pie_png_file(df, column, caption, file_name):
 
 def info_tables(df):
     df.replace('', pd.NA, inplace=True)
-    # Count occurrences and convert to DataFrame
+    
+    src_port_count = df['src_port'].value_counts().reset_index()
+    src_port_count.columns = ['Port Number', 'Count']  # Rename columns
+    src_port_count = src_port_count.sort_values(by='Count', ascending=False)
+    src_port_count = src_port_count.to_dict(orient='records')
+
     dst_port_count = df['dst_port'].value_counts().reset_index()
     dst_port_count.columns = ['Port Number', 'Count']  # Rename columns
-
-    # Sort the DataFrame by 'Count' in descending order
     dst_port_count = dst_port_count.sort_values(by='Count', ascending=False)
     dst_port_list = dst_port_count.to_dict(orient='records')
 
-    return dst_port_list
+    return src_port_count, dst_port_list
 
 
 def seek_https_requests(pcap_packets):
