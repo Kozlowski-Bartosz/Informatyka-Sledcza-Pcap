@@ -53,6 +53,21 @@
     </table>
     {%endfor%}
 
+    <!-- TODO: handle output of various file types. For now it only prints files paths -->
+    <h1>Extracted FTP Files</h1>
+    <table style="width: 75%">
+        <tr>
+            <th>File path</th>
+        </tr>
+    </table>
+    {% for file in ftp_files_list %}
+    <table style="width: 75%">
+        <tr>
+            <td>{{ file }}</td>
+        </tr>
+    </table>
+    {%endfor%}
+
     <h1>Extracted Images</h1>
     <div class="gallery">
     {% for image_filename in image_filenames %}

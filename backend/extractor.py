@@ -90,3 +90,46 @@ def extract_ftp_credentials(pcap_packets):
                 elif 'PASS' in payload:
                     ftp_pass_list.append(payload)
     return list(zip(ftp_login_list, ftp_pass_list))
+
+def infer_file_type(data):
+    if data.startswith(b'\xFF\xD8\xFF'):
+        return 'jpg'
+    elif data.startswith(b'\x89PNG\r\n\x1a\n'):
+        return 'png'
+    elif data.startswith(b'GIF'):
+        return 'gif'
+    elif data[0] == 0x25 and data[1] == 0x50 and data[2] == 0x44 and data[3] == 0x46:
+        return 'pdf'
+    elif data.isascii():
+        return 'txt'
+    return 'bin'
+
+def extract_file_from_ftp(pcap_packets):
+    files_paths = []
+    try:
+        packets = rdpcap(pcap_packets)
+        sessions = packets.sessions()
+    except AttributeError:
+        return files_paths
+
+    for session in sessions:
+        payload_data = b""
+        for packet in sessions[session]:
+            try:
+                # Check for FTP data on non-standard ports (not control port 21)
+                if packet[TCP].dport != 21 and packet[TCP].sport != 21 and packet.haslayer(Raw):
+                    payload_data += packet[Raw].load
+            except:
+                continue
+
+        if payload_data:
+            # Determine file type and extension
+            file_type = infer_file_type(payload_data)
+            filename = f"output/files/extracted_file_from_ftp_session_{session}.{file_type}"
+            files_paths.append(filename)
+
+            # Save the extracted file
+            with open(filename, "wb") as f:
+                f.write(payload_data)
+                print(f"File saved: {filename}")
+    return files_paths
