@@ -68,6 +68,7 @@ def plot_pie_png_file(df, column, caption, file_name):
     plt.close(fig)
 
 def info_tables(df):
+    df.replace('', pd.NA, inplace=True)
     # Count occurrences and convert to DataFrame
     dst_port_count = df['dst_port'].value_counts().reset_index()
     dst_port_count.columns = ['Port Number', 'Count']  # Rename columns
