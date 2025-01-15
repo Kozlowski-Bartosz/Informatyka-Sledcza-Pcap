@@ -8,7 +8,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
     $(document).ready(function() {
-        $(".column-filter").on("keyup", function() {
+        $(".column-filter").on("keyup", filterTable);
+
+        function filterTable() {
             var filters = [];
             $("#data-table tr").each(function() {
                 var row = $(this);
@@ -39,8 +41,22 @@
                 // Show or hide row based on match result
                 row.toggle(isMatch);
             });
+        }
+
+        $('#save-visible-rows').click(function() {
+        var visibleRowsData = [];
+        $('#data-table tr:visible').each(function() {
+            var rowData = $(this).find('td').map(function() {
+                return $(this).text();
+            }).get().join('\t');  // Collects text from each cell separated by a tab
+            visibleRowsData.push(rowData);
+        });
+        
+        $.post('/save', {data: visibleRowsData.join('\n')}, function(response) {
+            alert('Data saved successfully!');
         });
     });
+});
     </script>
 </head>
 <body>
@@ -55,6 +71,9 @@
     </div> 
     <div style="text-align: center; margin: 10px;">
     <h1>Scapy Parsed Packets</h1>
+
+    <button id="save-visible-rows">Save Visible Rows</button>
+
     <table>
         <colgroup>
             <col span="1" style="min-width:80px; width: 5%;">

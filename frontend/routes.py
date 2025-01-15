@@ -87,3 +87,10 @@ def output_images(filename):
     if os.path.exists(path):
         response = send_file(path)
     return response
+
+@main_bp.route('/save', methods=['POST'])
+def save_visible_rows():
+    data = request.form['data']
+    with open('output/results/visible_rows.txt', 'w') as file:
+        file.write(data)
+    return 'OK'
