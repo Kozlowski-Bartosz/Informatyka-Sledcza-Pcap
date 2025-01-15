@@ -119,7 +119,6 @@ def extract_file_from_ftp(pcap_packets):
         payload_data = b""
         for packet in sessions[session]:
             try:
-                # Check for FTP data on non-standard ports (not control port 21)
                 if packet.haslayer('TCP') and packet.haslayer('Raw'):
                     payload = bytes(packet[TCP].payload).decode(errors='ignore')
                     if any(code in payload for code in passive_mode_codes):
@@ -133,13 +132,11 @@ def extract_file_from_ftp(pcap_packets):
                 continue
 
         if payload_data:
-            # Determine file type and extension
             file_type = infer_file_type(payload_data)
             filename = str_to_filename(f"extracted_file_from_ftp_session_{session}.{file_type}")
             filepath = f"output/files/{filename}"
             files_paths.append(filepath)
 
-            # Save the extracted file
             with open(filepath, "wb") as f:
                 f.write(payload_data)
                 print(f"File saved: {filepath}")
