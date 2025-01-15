@@ -126,13 +126,14 @@ def extract_file_from_ftp(pcap_packets):
         if payload_data:
             # Determine file type and extension
             file_type = infer_file_type(payload_data)
-            filename = str_to_filename(f"output/files/extracted_file_from_ftp_session_{session}.{file_type}")
-            files_paths.append(filename)
+            filename = str_to_filename(f"extracted_file_from_ftp_session_{session}.{file_type}")
+            filepath = f"output/files/{filename}"
+            files_paths.append(filepath)
 
             # Save the extracted file
-            with open(filename, "wb") as f:
+            with open(filepath, "wb") as f:
                 f.write(payload_data)
-                print(f"File saved: {filename}")
+                print(f"File saved: {filepath}")
     return files_paths
 
 
