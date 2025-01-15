@@ -83,10 +83,8 @@ def extract_ftp_credentials(pcap_packets):
 
     for packet in packets:
         if packet.haslayer(TCP) and packet.haslayer(Raw):
-            # Check for packets using the FTP control port 21
             if packet[TCP].dport == 21 or packet[TCP].sport == 21:
                 payload = packet[Raw].load.decode(errors='ignore')
-                # Look for USER and PASS commands in the FTP payload
                 if 'USER' in payload:
                     ftp_login_list.append(payload)
                 elif 'PASS' in payload:
