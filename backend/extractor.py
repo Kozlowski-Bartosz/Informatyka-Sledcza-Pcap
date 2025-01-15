@@ -83,9 +83,9 @@ def extract_ftp_credentials(pcap_packets):
         return ftp_login_list, ftp_pass_list
 
     for packet in packets:
-        if packet.haslayer(TCP) and packet.haslayer(Raw):
-            if packet[TCP].dport == 21 or packet[TCP].sport == 21:
-                payload = packet[Raw].load.decode(errors='ignore')
+        if packet.haslayer('TCP') and packet.haslayer('Raw'):
+            if packet['TCP'].dport == 21 or packet['TCP'].sport == 21:
+                payload = packet['Raw'].load.decode(errors='ignore')
                 if 'USER' in payload:
                     ftp_login_list.append(payload)
                 elif 'PASS' in payload:
@@ -106,6 +106,9 @@ def infer_file_type(data):
     return 'bin'
 
 def extract_file_from_ftp(pcap_packets):
+    passive_mode_codes = ['227 Entering Passive Mode', '228 Entering Long Passive Mode', '229 Entering Extended Passive Mode']
+    #TODO: Make active mode work
+    passive_ports = []
     files_paths = []
     try:
         packets = rdpcap(pcap_packets)
@@ -117,20 +120,24 @@ def extract_file_from_ftp(pcap_packets):
         payload_data = b""
         for packet in sessions[session]:
             try:
-                # Check for FTP data on non-standard ports (not control port 21)
-                if packet[TCP].dport != 21 and packet[TCP].sport != 21 and packet.haslayer(Raw):
-                    payload_data += packet[Raw].load
+                if packet.haslayer('TCP') and packet.haslayer('Raw'):
+                    payload = bytes(packet[TCP].payload).decode(errors='ignore')
+                    if any(code in payload for code in passive_mode_codes):
+                        passive_port = re.search(r'\((.*?)\)', payload).group(1).split(',')[-2:]
+                        passive_port = int(passive_port[0].strip("|"))
+                        passive_ports.append(passive_port)
+                        print(f"Passive port: {passive_port}")
+                if (packet['TCP'].dport in passive_ports or packet['TCP'].sport in passive_ports) and packet.haslayer('Raw'):
+                    payload_data += packet['Raw'].load
             except:
                 continue
 
         if payload_data:
-            # Determine file type and extension
             file_type = infer_file_type(payload_data)
             filename = str_to_filename(f"extracted_file_from_ftp_session_{session}.{file_type}")
             filepath = f"output/files/{filename}"
             files_paths.append(filepath)
 
-            # Save the extracted file
             with open(filepath, "wb") as f:
                 f.write(payload_data)
                 print(f"File saved: {filepath}")
