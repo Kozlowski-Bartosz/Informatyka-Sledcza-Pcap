@@ -73,3 +73,22 @@ def extract_authentication_data_from_http(pcap_packets):
                     cred_list.append(auth[7:].decode())
 
     return list(zip(type_list, cred_list))
+
+def extract_ftp_credentials(pcap_packets):
+    ftp_login_list, ftp_pass_list = [], []
+    try:
+        packets = rdpcap(pcap_packets)
+    except AttributeError:
+        return ftp_login_list, ftp_pass_list
+
+    for packet in packets:
+        if packet.haslayer(TCP) and packet.haslayer(Raw):
+            # Check for packets using the FTP control port 21
+            if packet[TCP].dport == 21 or packet[TCP].sport == 21:
+                payload = packet[Raw].load.decode(errors='ignore')
+                # Look for USER and PASS commands in the FTP payload
+                if 'USER' in payload:
+                    ftp_login_list.append(payload)
+                elif 'PASS' in payload:
+                    ftp_pass_list.append(payload)
+    return list(zip(ftp_login_list, ftp_pass_list))

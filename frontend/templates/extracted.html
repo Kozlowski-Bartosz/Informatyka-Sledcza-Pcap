@@ -37,6 +37,22 @@
     </table>
     {%endfor%}
 
+    <h1>Extracted FTP Credentials</h1>
+    <table style="width: 75%">
+        <tr>
+            <th>Login</th>
+            <th>Password</th>
+        </tr>
+    </table>
+    {% for cred in ftp_cred_list %}
+    <table style="width: 75%">
+        <tr>
+            <td>{{ cred[0] }}</td>
+            <td>{{ cred[1] }}</td>
+        </tr>
+    </table>
+    {%endfor%}
+
     <h1>Extracted Images</h1>
     <div class="gallery">
     {% for image_filename in image_filenames %}
