@@ -1,5 +1,6 @@
 from scapy.all import rdpcap, TCP
 from base64 import b64decode
+import re
 
 def extract_images_from_http(pcap_packets):
     image_count = 0
@@ -125,7 +126,7 @@ def extract_file_from_ftp(pcap_packets):
         if payload_data:
             # Determine file type and extension
             file_type = infer_file_type(payload_data)
-            filename = f"output/files/extracted_file_from_ftp_session_{session}.{file_type}"
+            filename = str_to_filename(f"output/files/extracted_file_from_ftp_session_{session}.{file_type}")
             files_paths.append(filename)
 
             # Save the extracted file
@@ -133,3 +134,11 @@ def extract_file_from_ftp(pcap_packets):
                 f.write(payload_data)
                 print(f"File saved: {filename}")
     return files_paths
+
+
+def str_to_filename(s):
+    s = str(s).strip().replace(" ", "_")
+    s = re.sub(r"(?u)[^-\w.]", "", s)
+    if s in {"", ".", ".."}:
+        return"_"
+    return s
