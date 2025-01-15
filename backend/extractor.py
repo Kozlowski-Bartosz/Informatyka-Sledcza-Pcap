@@ -107,6 +107,7 @@ def infer_file_type(data):
 
 def extract_file_from_ftp(pcap_packets):
     passive_mode_codes = ['227 Entering Passive Mode', '228 Entering Long Passive Mode', '229 Entering Extended Passive Mode']
+    #TODO: Make active mode work
     passive_ports = []
     files_paths = []
     try:
