@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, current_app, redirect, Response, send_file
+from flask import Blueprint, render_template, request, session, current_app, redirect, Response, send_file, flash
 from werkzeug.utils import secure_filename
 from backend.pcap_reader import (
     read_packets,
@@ -40,6 +40,10 @@ def uploadFile():
 
         # Extracting uploaded file name
         data_filename = secure_filename(f.filename)
+
+        if not data_filename.lower().endswith('.pcap'):
+            flash("That's not a .pcap!")
+            return redirect('/')
 
         f.save(os.path.join(
             current_app.config['UPLOAD_FOLDER'], data_filename))
