@@ -42,18 +42,18 @@ def createPDF(stats):
     # First page with headers
     pdf.add_page()
     pdf.set_font("Helvetica", size = 12)
-    pdf.cell(0, 10, "Statistics", align='C', ln=1)
+    # pdf.cell(0, 10, "Statistics", align='C', ln=1)
     pdf.add_dict(stats)
     # Adding second page for images
-    pdf.add_page()
-    pdf.cell(0, 10, "Graphs", align='C')
+    # pdf.add_page()
+    # pdf.cell(0, 10, "Graphs", align='C')
 
     # Image paths
     images = ['frontend/static/images/src.png', 'frontend/static/images/dst.png', 'frontend/static/images/sport.png', 'frontend/static/images/dport.png']
 
     # Coordinates for the grid placement
     x_list = [10, 110]  # X coordinates for two columns
-    y_list = [50, 150]  # Y coordinates for two rows
+    y_list = [80, 180]  # Y coordinates for two rows
 
     # Adding images in a grid 2x2
     for i, img in enumerate(images):
