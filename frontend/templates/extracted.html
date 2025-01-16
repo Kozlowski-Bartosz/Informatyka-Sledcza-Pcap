@@ -17,10 +17,14 @@
         <a class="active">Extracted Data</a>
     </div>
     <div style="margin: 10px;">
-    <h1>Extracted URLs from HTTP/S</h1>
-    {% for url in url_list %}
-    {{ url }}<br>
-    {% endfor %}
+    
+    {% if url_list %}
+        <h1>Extracted URLs from HTTP/S</h1>
+        {% for url in url_list %}
+        {{ url }}<br>
+        {% endfor %}
+    {% endif %}
+
     <h1>Extracted HTTP Credentials</h1>
     <table style="width: 75%">
         <tr>
