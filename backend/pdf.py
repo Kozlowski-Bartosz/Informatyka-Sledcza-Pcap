@@ -43,7 +43,7 @@ def createPDF():
     pdf.cell(0, 10, "Graphs", align='C')
 
     # Image paths
-    images = ['static/images/src.png', 'static/images/dst.png', 'static/images/sport.png', 'static/images/dport.png']
+    images = ['frontend/static/images/src.png', 'frontend/static/images/dst.png', 'frontend/static/images/sport.png', 'frontend/static/images/dport.png']
 
     # Coordinates for the grid placement
     x_list = [10, 110]  # X coordinates for two columns
@@ -67,4 +67,4 @@ def createPDF():
     pdf.simple_table(header, data)
 
     # Save the PDF to a file
-    pdf.output("static/PCAP_Statistics.pdf")
+    pdf.output("output/PCAP_Statistics.pdf")
