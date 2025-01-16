@@ -37,9 +37,9 @@ class PDF(FPDF):
             entry = f"{key}: {value}"
             self.cell(0, 10, entry, ln=True)
 
-    def add_dict_table(self, data):
+    def add_dict_table(self, data, caption):
         self.set_font("Arial", size=12)
-        self.cell(0, 10, "Dictionary Table", ln=True, align="C")
+        self.cell(0, 10, caption, ln=True, align="C")
 
         # Header row
         headers = data[0].keys()
@@ -49,6 +49,7 @@ class PDF(FPDF):
         self.ln()
 
         # Data rows
+        self.set_font("Arial", size=10)
         for item in data:
             for value in item.values():
                 self.cell(col_width, 10, str(value), border=1, align="C")
@@ -90,9 +91,7 @@ def createPDF(stats, src_ip, dst_ip, src_ports, dst_ports):
         ['Row 3 Col 1', 'Row 3 Col 2', 'Row 3 Col 3']
     ]
 
-    # Adding a simple table
-    print(src_ip)
-    pdf.add_dict_table(src_ip)
+    pdf.add_dict_table(src_ip, "Source IPs")
 
     # Save the PDF to a file
     pdf.output("output/PCAP_Statistics.pdf")
