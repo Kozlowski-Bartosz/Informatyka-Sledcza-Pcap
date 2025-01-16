@@ -26,8 +26,8 @@ def is_pcap_file_by_header(filename):
     try:
         with open(filename, 'rb') as f:
             header = f.read(4)
-            # Check for common pcap magic numbers
-            return header in (b'\xd4\xc3\xb2\xa1', b'\xa1\xb2\xc3\xd4')
+            pcap_magic_numbers = [b'\xd4\xc3\xb2\xa1', b'\xa1\xb2\xc3\xd4']
+            return header in pcap_magic_numbers
     except IOError:
         return False
 
@@ -41,13 +41,11 @@ def index():
 @main_bp.route('/upload', methods=['POST'])
 def uploadFile():
     if request.method == 'POST':
-      # upload file flask
         f = request.files.get('file')
 
-        # Extracting uploaded file name
         data_filename = secure_filename(f.filename)
 
-        if not data_filename.lower().endswith('.pcap'):
+        if not data_filename.lower().endswith('.pcap,') and not data_filename.lower().endswith('.cap'):
             flash("That's not a .pcap!")
             return redirect('/')
 
@@ -85,7 +83,6 @@ def stats():
     plot_pie_png_file(df, 'src_port', 'Top source ports', 'sport.png')
     plot_pie_png_file(df, 'dst_port', 'Top destination ports', 'dport.png')
     src_ip, dst_ip, src_ports, dst_ports = info_tables(df)
-    # create_pdf(stats, src_ip, dst_ip, src_ports, dst_ports)
     return render_template('stats.html', pcap_stats = stats, src_ip_list = src_ip, dst_ip_list = dst_ip, src_port_list = src_ports, dst_port_list = dst_ports)
 
 
@@ -101,7 +98,6 @@ def extracted():
     return render_template('extracted.html', url_list=http_request_data, image_filenames=images, cred_list=cred, ftp_cred_list=ftp_cred, ftp_files_list=ftp_files)
 
 
-# Required to import images from outside the static folder
 @main_bp.route('/output/images/<path:filename>')
 def output_images(filename):
     path = os.path.abspath(f"output/images/{filename}")
