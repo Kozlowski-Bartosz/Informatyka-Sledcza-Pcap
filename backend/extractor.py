@@ -92,7 +92,7 @@ def extract_ftp_credentials(pcap_packets):
                     ftp_pass_list.append(payload)
     return list(zip(ftp_login_list, ftp_pass_list))
 
-def infer_file_type(data):
+def infer_ftp_file_type(data):
     if data.startswith(b'\xFF\xD8\xFF'):
         return 'jpg'
     elif data.startswith(b'\x89PNG\r\n\x1a\n'):
@@ -133,7 +133,7 @@ def extract_file_from_ftp(pcap_packets):
                 continue
 
         if payload_data:
-            file_type = infer_file_type(payload_data)
+            file_type = infer_ftp_file_type(payload_data)
             filename = str_to_filename(f"extracted_file_from_ftp_session_{session}.{file_type}")
             filepath = f"output/files/{filename}"
             files_paths.append(filepath)
