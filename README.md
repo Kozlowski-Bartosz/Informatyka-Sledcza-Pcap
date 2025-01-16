@@ -1,6 +1,6 @@
 ## Pcap Analysis Tool
-*Pretty* work-in-progress. To use, run app.py
+To use, install requirements from requirements.txt and run app.py
 
-Images are extracted by going to the extraction page. They are saved into output/images folder from the project's root.
+File, images, and saved outputs are extracted into the output folder from the project's root.
 
-Application runs on localhost:5000. Web interface allows to upload a PCAP file. You can display the contents in the Results tab.
+Application runs on localhost:5000. Web interface allows to upload a PCAP or CAP file. You can display the contents in the Results tab, view statistics in the Statistics tab, or view found data and files in the Extracted Data tab.
