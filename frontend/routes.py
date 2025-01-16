@@ -14,6 +14,9 @@ from backend.extractor import (
     extract_ftp_credentials,
     extract_file_from_ftp
 )
+from backend.pdf import (
+    createPDF
+)
 
 import os
 import logging
