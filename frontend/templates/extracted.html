@@ -18,67 +18,86 @@
     </div>
     <div style="margin: 10px;">
     
+    <h1>Extracted URLs from HTTP/S</h1>
     {% if url_list %}
-        <h1>Extracted URLs from HTTP/S</h1>
         {% for url in url_list %}
         {{ url }}<br>
         {% endfor %}
+    {% else %}
+        No URLs found
     {% endif %}
 
     <h1>Extracted HTTP Credentials</h1>
-    <table style="width: 75%">
-        <tr>
-            <th>Auth Type</th>
-            <th>Credentials</th>
-        </tr>
-    </table>
-    {% for cred in cred_list %}
-    <table style="width: 75%">
-        <tr>
-            <td>{{ cred[0] }}</td>
-            <td>{{ cred[1] }}</td>
-        </tr>
-    </table>
-    {%endfor%}
+    {% if cred_list %}
+        <table style="width: 75%">
+            <tr>
+                <th>Auth Type</th>
+                <th>Credentials</th>
+            </tr>
+        </table>
+        {% for cred in cred_list %}
+        <table style="width: 75%">
+            <tr>
+                <td>{{ cred[0] }}</td>
+                <td>{{ cred[1] }}</td>
+            </tr>
+        </table>
+        {%endfor%}
+    {% else %}
+        No credentials found
+    {% endif %}
+    
 
     <h1>Extracted FTP Credentials</h1>
-    <table style="width: 75%">
-        <tr>
-            <th>Login</th>
-            <th>Password</th>
-        </tr>
-    </table>
-    {% for cred in ftp_cred_list %}
-    <table style="width: 75%">
-        <tr>
-            <td>{{ cred[0] }}</td>
-            <td>{{ cred[1] }}</td>
-        </tr>
-    </table>
-    {%endfor%}
+    {% if ftp_cred_list %}
+        <table style="width: 75%">
+            <tr>
+                <th>Login</th>
+                <th>Password</th>
+            </tr>
+        </table>
+        {% for cred in ftp_cred_list %}
+        <table style="width: 75%">
+            <tr>
+                <td>{{ cred[0] }}</td>
+                <td>{{ cred[1] }}</td>
+            </tr>
+        </table>
+        {%endfor%}
+    {% else %}
+        No FTP credentials found
+    {% endif %}
 
     <!-- TODO: handle output of various file types. For now it only prints files paths -->
     <h1>Extracted FTP Files</h1>
-    <table style="width: 75%">
-        <tr>
-            <th>File path</th>
-        </tr>
-    </table>
-    {% for file in ftp_files_list %}
-    <table style="width: 75%">
-        <tr>
-            <td>{{ file }}</td>
-        </tr>
-    </table>
-    {%endfor%}
+    {% if ftp_files_list %}
+        <table style="width: 75%">
+            <tr>
+                <th>File path</th>
+            </tr>
+        </table>
+        {% for file in ftp_files_list %}
+        <table style="width: 75%">
+            <tr>
+                <td>{{ file }}</td>
+            </tr>
+        </table>
+        {%endfor%}
+    {% else %}
+        No FTP files found
+    {% endif %}
 
     <h1>Extracted Images</h1>
-    <div class="gallery">
-    {% for image_filename in image_filenames %}
-    <img src="{{ url_for('main.output_images', filename=image_filename.split('/')[-1]) }}" alt="Extracted Image" style="max-width: 500px; padding: 20px; background:#ddd">
-    {% endfor %}
-    </div>
-    <!-- todo: prettify -->
-    </div>
+    {% if image_filenames %}
+        <div class="gallery">
+        {% for image_filename in image_filenames %}
+        <img src="{{ url_for('main.output_images', filename=image_filename.split('/')[-1]) }}" alt="Extracted Image" style="max-width: 500px; padding: 20px; background:#ddd">
+        {% endfor %}
+        </div>
+        <!-- todo: prettify -->
+        </div>
+    {% else %}
+        No images found
+    {% endif %}
 </body>
 </html>
