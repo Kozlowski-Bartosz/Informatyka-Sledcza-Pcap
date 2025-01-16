@@ -1,9 +1,10 @@
 from fpdf import FPDF
+import pandas as pd
 
 class PDF(FPDF):
     def header(self):
         # This is the header for all pages
-        self.set_font('Helvetica', 'B', 12)
+        self.set_font('Helvetica', 'B', 14)
         self.cell(0, 10, 'PCAP Statistics', 0, align='C')
         self.ln(10)
 
@@ -28,6 +29,7 @@ class PDF(FPDF):
             for item in row:
                 self.cell(40, 10, item, border=1)
             self.ln()
+
     def add_dict(self, data_dict):
         self.set_font("Helvetica", size=12)
         
@@ -41,12 +43,14 @@ def createPDF(stats):
 
     # First page with headers
     pdf.add_page()
-    pdf.set_font("Helvetica", size = 12)
     # pdf.cell(0, 10, "Statistics", align='C', ln=1)
-    pdf.add_dict(stats)
-    # Adding second page for images
-    # pdf.add_page()
-    # pdf.cell(0, 10, "Graphs", align='C')
+    # pdf.add_dict(stats)
+    pdf.set_font("Helvetica", size = 12)
+    pdf.cell(0, 10, 'Packet capture elapsed time: ' + str(stats['pcap_duration']) + 's', ln=True)
+    pdf.cell(0, 10, 'Packet count: ' + str(stats['packets_count']), ln=True)
+    pdf.cell(0, 10, 'Average packets per second: ' + str(stats['pps']), ln=True)
+    pdf.cell(0, 10, 'Date and time of first packet: ' + str(stats['first_packet_time']), ln=True)
+    pdf.cell(0, 10, 'Date and time of last packet: ' + str(stats['last_packet_time']), ln=True)
 
     # Image paths
     images = ['frontend/static/images/src.png', 'frontend/static/images/dst.png', 'frontend/static/images/sport.png', 'frontend/static/images/dport.png']

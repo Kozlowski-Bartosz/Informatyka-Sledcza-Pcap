@@ -44,7 +44,7 @@ def pcap_statistics(df):
     duration = df['timestamp'].iloc[-1] - df['timestamp'].iloc[0]
     count = df.shape[0]
     return {
-        "pcap_duration": duration,
+        "pcap_duration": round(duration, 3),
         "packets_count": count,
         "pps": round(count / duration, 2),
         "first_packet_time": datetime.fromtimestamp(float(df['timestamp'].iloc[0])).strftime('%Y-%m-%d %H:%M:%S'),
