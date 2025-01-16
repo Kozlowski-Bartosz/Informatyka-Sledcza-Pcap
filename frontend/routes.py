@@ -46,7 +46,7 @@ def uploadFile():
         data_filename = secure_filename(f.filename)
 
         if not data_filename.lower().endswith('.pcap') and not data_filename.lower().endswith('.cap'):
-            flash("That's not a .pcap!")
+            flash("That's not a .pcap or a .cap!")
             return redirect('/')
 
         f.save(os.path.join(
@@ -55,7 +55,7 @@ def uploadFile():
         pcap_path = os.path.join(current_app.config['UPLOAD_FOLDER'], data_filename)
 
         if not is_pcap_file_by_header(pcap_path):
-            flash("That's for sure not a .pcap!")
+            flash("That's for sure not a .pcap! or a .cap")
             return redirect('/')
 
         session['uploaded_pcap_file_path'] = pcap_path
