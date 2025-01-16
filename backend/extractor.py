@@ -67,9 +67,8 @@ def extract_images_from_http(pcap_packets):
             elif b"image/bmp" in http_payload:
                 image_extension = "bmp"
             else:
-                continue  # Skip unsupported image types
+                continue
 
-            # Save the image
             image_path = f"output/images/image_{image_count}.{image_extension}"
             image_paths.append(image_path)
             with open(image_path, "wb") as image_file:
@@ -77,7 +76,6 @@ def extract_images_from_http(pcap_packets):
                 print(f"Saved: {image_path}")
                 image_count += 1
 
-            # Search for the next image in session
             http_payload = http_payload[packet_end:]
 
     return image_paths
@@ -105,6 +103,7 @@ def extract_authentication_data_from_http(pcap_packets):
 
     return list(zip(type_list, cred_list))
 
+
 def extract_ftp_credentials(pcap_packets):
     ftp_login_list, ftp_pass_list = [], []
     try:
@@ -122,6 +121,7 @@ def extract_ftp_credentials(pcap_packets):
                     ftp_pass_list.append(payload)
     return list(zip(ftp_login_list, ftp_pass_list))
 
+
 def infer_ftp_file_type(data):
     if data.startswith(b'\xFF\xD8\xFF'):
         return 'jpg'
@@ -135,9 +135,9 @@ def infer_ftp_file_type(data):
         return 'txt'
     return 'bin'
 
+
 def extract_file_from_ftp(pcap_packets):
     passive_mode_codes = ['227 Entering Passive Mode', '228 Entering Long Passive Mode', '229 Entering Extended Passive Mode']
-    #TODO: Make active mode work
     passive_ports = []
     files_paths = []
     try:

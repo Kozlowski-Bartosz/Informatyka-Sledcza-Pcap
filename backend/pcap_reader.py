@@ -72,22 +72,22 @@ def info_tables(df):
     df = df[~(df['source'].str.match(mac_address_regex) | df['destination'].str.match(mac_address_regex))]
     
     src_ip_count = df['source'].value_counts().reset_index()
-    src_ip_count.columns = ['Source IP', 'Count']  # Rename columns
+    src_ip_count.columns = ['Source IP', 'Count']
     src_ip_count = src_ip_count.sort_values(by='Count', ascending=False)
     src_ip_count = src_ip_count.to_dict(orient='records')
 
     dst_ip_count = df['destination'].value_counts().reset_index()
-    dst_ip_count.columns = ['Destination IP', 'Count']  # Rename columns
+    dst_ip_count.columns = ['Destination IP', 'Count']
     dst_ip_count = dst_ip_count.sort_values(by='Count', ascending=False)
     dst_ip_count = dst_ip_count.to_dict(orient='records')
     
     src_port_count = df['src_port'].value_counts().reset_index()
-    src_port_count.columns = ['Port Number', 'Count']  # Rename columns
+    src_port_count.columns = ['Port Number', 'Count']
     src_port_count = src_port_count.sort_values(by='Count', ascending=False)
     src_port_count = src_port_count.to_dict(orient='records')
 
     dst_port_count = df['dst_port'].value_counts().reset_index()
-    dst_port_count.columns = ['Port Number', 'Count']  # Rename columns
+    dst_port_count.columns = ['Port Number', 'Count']
     dst_port_count = dst_port_count.sort_values(by='Count', ascending=False)
     dst_port_list = dst_port_count.to_dict(orient='records')
 
