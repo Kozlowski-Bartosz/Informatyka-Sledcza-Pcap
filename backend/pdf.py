@@ -2,39 +2,34 @@ from fpdf import FPDF
 
 class PDF(FPDF):
     def header(self):
-        # This is the header for all pages
         self.set_font('Helvetica', 'B', 14)
         self.cell(0, 5, 'PCAP Statistics', 0, align='C')
         self.ln(10)
 
+
     def footer(self):
-        # Footer that includes page number
         self.set_y(-15)
         self.set_font('Helvetica', 'I', 8)
         self.cell(0, 10, f'{self.page_no()}', 0, align='C')
 
+
     def simple_table(self, header, data):
-        # Set header font
         self.set_font('Helvetica', 'B', 12)
-        # Draw header
         for col in header:
             self.cell(40, 10, col, border=1)
         self.ln()
         
-        # Data font
         self.set_font('Helvetica', '', 12)
-        # Draw data rows
         for row in data:
             for item in row:
                 self.cell(40, 10, item, border=1)
             self.ln()
 
+
     def add_dict_table(self, data, caption):
-        # Set font style for caption and headers
         self.set_font("Helvetica", size=12, style="B")
         self.cell(0, 10, caption, ln=True, align="C")
 
-        # Header row
         headers = data[0].keys()
         col_width = 40
         table_width = col_width * len(headers)
@@ -46,13 +41,13 @@ class PDF(FPDF):
             self.cell(col_width, 6, header, border=1, align="C")
         self.ln()
 
-        # Data rows
         self.set_font("Helvetica", size=10)
         for item in data:
             self.set_x(start_x)
             for value in item.values():
                 self.cell(col_width, 6, str(value), border=1, align="C")
             self.ln()
+
 
 def create_pdf(stats, src_ip, dst_ip, src_ports, dst_ports):
     pdf = PDF()
@@ -81,5 +76,4 @@ def create_pdf(stats, src_ip, dst_ip, src_ports, dst_ports):
     pdf.add_dict_table(src_ports, "Source Ports Usage")
     pdf.ln(10)
     pdf.add_dict_table(dst_ports, "Destination Ports Usage")
-    # Save the PDF to a file
     pdf.output("output/PCAP_Statistics.pdf")

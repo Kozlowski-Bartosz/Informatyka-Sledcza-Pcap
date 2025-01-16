@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, current_app, redirect, Response, send_file, flash
+from flask import Blueprint, render_template, request, session, current_app, redirect, send_file, flash
 from werkzeug.utils import secure_filename
 from backend.pcap_reader import (
     read_packets,
@@ -14,16 +14,13 @@ from backend.extractor import (
     extract_ftp_credentials,
     extract_file_from_ftp
 )
-from backend.pdf import (
-    create_pdf
-)
-
+from backend.pdf import create_pdf
 import os
 import logging
 
 logger = logging.getLogger(__name__)
-
 main_bp = Blueprint('main', __name__)
+
 
 def is_pcap_file_by_header(filename):
     try:
@@ -33,6 +30,7 @@ def is_pcap_file_by_header(filename):
             return header in (b'\xd4\xc3\xb2\xa1', b'\xa1\xb2\xc3\xd4')
     except IOError:
         return False
+
 
 @main_bp.route('/')
 def index():
@@ -111,12 +109,14 @@ def output_images(filename):
         response = send_file(path)
     return response
 
+
 @main_bp.route('/save', methods=['POST'])
 def save_visible_rows():
     data = request.form['data']
     with open('output/results/filtered_packets.txt', 'w') as file:
         file.write(data)
     return 'OK'
+
 
 @main_bp.route('/savepdf', methods=['POST'])
 def save_to_pdf():

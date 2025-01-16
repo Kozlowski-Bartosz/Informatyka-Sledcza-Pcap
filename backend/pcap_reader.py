@@ -28,14 +28,12 @@ def read_packets(pcap_packets):
 
     return packet_data
 
-# Export packets to pandas dataframe
 
 def packets_to_df(pcap_packets):
     data = read_packets(pcap_packets)
     df = pd.DataFrame(data)
     return df
 
-# Take stats from pcap file
 
 def pcap_statistics(df):
     duration = df['timestamp'].iloc[-1] - df['timestamp'].iloc[0]
@@ -66,6 +64,7 @@ def plot_pie_png_file(df, column, caption, file_name):
     plt.tight_layout()
     plt.savefig(f'frontend/static/images/{file_name}')
     plt.close(fig)
+
 
 def info_tables(df):
     df.replace('', pd.NA, inplace=True)
