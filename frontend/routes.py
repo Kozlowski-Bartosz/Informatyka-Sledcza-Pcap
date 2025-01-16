@@ -87,7 +87,7 @@ def stats():
     plot_pie_png_file(df, 'src_port', 'Top source ports', 'sport.png')
     plot_pie_png_file(df, 'dst_port', 'Top destination ports', 'dport.png')
     src_ip, dst_ip, src_ports, dst_ports = info_tables(df)
-    create_pdf(stats, src_ip, dst_ip, src_ports, dst_ports)
+    # create_pdf(stats, src_ip, dst_ip, src_ports, dst_ports)
     return render_template('stats.html', pcap_stats = stats, src_ip_list = src_ip, dst_ip_list = dst_ip, src_port_list = src_ports, dst_port_list = dst_ports)
 
 
@@ -116,4 +116,14 @@ def save_visible_rows():
     data = request.form['data']
     with open('output/results/filtered_packets.txt', 'w') as file:
         file.write(data)
+    return 'OK'
+
+@main_bp.route('/savepdf', methods=['POST'])
+def save_to_pdf():
+    current_app.logger.debug("Stats route")
+    pcap_file_path = session.get('uploaded_pcap_file_path', None)
+    df = packets_to_df(pcap_file_path)
+    stats = pcap_statistics(df)
+    src_ip, dst_ip, src_ports, dst_ports = info_tables(df)
+    create_pdf(stats, src_ip, dst_ip, src_ports, dst_ports)
     return 'OK'

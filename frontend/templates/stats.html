@@ -26,6 +26,16 @@
             text-align: left; /* Align text to the left */
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#save-to-pdf').click(function() {
+            $.post('/savepdf', function(response) {
+                alert('Data saved successfully to output/PCAP_Statistics.pdf');
+            });
+    });
+});
+    </script>
     <title>PCAP Viewer</title>
 </head>
 <body>
@@ -40,6 +50,7 @@
     </div> 
     <div style="text-align: center;">
         <h1>Statistics</h1>
+        <button id="save-to-pdf">Save to PDF</button><br><br>
         Packet capture elapsed time: {{ pcap_stats.pcap_duration }}s<br>
         Packet count: {{ pcap_stats.packets_count }}<br>
         Average packets per second: {{ pcap_stats.pps }}<br>
