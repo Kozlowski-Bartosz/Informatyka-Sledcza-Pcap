@@ -14,16 +14,15 @@
             var filters = [];
             $("#data-table tr").each(function() {
                 var row = $(this);
-                var isMatch = true;  // Assume the row matches unless a mismatch is found
+                var isMatch = true;
 
-                // Gather all filter values and their corresponding column indices
                 $(".column-filter").each(function() {
                     var index = $(this).parent().index();
                     var value = $(this).val().toLowerCase();
                     if (value) {
-                        filters[index] = value;  // Store filter value at its corresponding column index
+                        filters[index] = value;
                     } else {
-                        filters[index] = null;  // Clear filter for this column if input is empty
+                        filters[index] = null;
                     }
                 });
 
@@ -32,13 +31,11 @@
                     if (filters[i]) {
                         var cellText = row.find('td').eq(i).text().toLowerCase();
                         if (!cellText.includes(filters[i])) {
-                            isMatch = false;  // Found a mismatch, so mark row as not a match
+                            isMatch = false;
                             break;
                         }
                     }
                 }
-
-                // Show or hide row based on match result
                 row.toggle(isMatch);
             });
         }
