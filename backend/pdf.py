@@ -37,7 +37,24 @@ class PDF(FPDF):
             entry = f"{key}: {value}"
             self.cell(0, 10, entry, ln=True)
 
-def createPDF(stats):
+    def add_dict_table(self, data):
+        self.set_font("Arial", size=12)
+        self.cell(0, 10, "Dictionary Table", ln=True, align="C")
+
+        # Header row
+        headers = data[0].keys()
+        col_width = self.w / (len(headers) + 1)  # Adjust column width to fit the page
+        for header in headers:
+            self.cell(col_width, 10, header, border=1, align="C")
+        self.ln()
+
+        # Data rows
+        for item in data:
+            for value in item.values():
+                self.cell(col_width, 10, str(value), border=1, align="C")
+            self.ln()
+
+def createPDF(stats, src_ip, dst_ip, src_ports, dst_ports):
     # Create instance of PDF class
     pdf = PDF()
 
@@ -66,7 +83,7 @@ def createPDF(stats):
     pdf.add_page()
 
     # Sample header and data
-    header = ['Header 1', 'Header 2', 'Header 3']
+    header = ['Header 1', 'Header 2']
     data = [
         ['Row 1 Col 1', 'Row 1 Col 2', 'Row 1 Col 3'],
         ['Row 2 Col 1', 'Row 2 Col 2', 'Row 2 Col 3'],
@@ -74,7 +91,8 @@ def createPDF(stats):
     ]
 
     # Adding a simple table
-    pdf.simple_table(header, data)
+    print(src_ip)
+    pdf.add_dict_table(src_ip)
 
     # Save the PDF to a file
     pdf.output("output/PCAP_Statistics.pdf")

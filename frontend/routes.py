@@ -70,7 +70,7 @@ def stats():
     plot_pie_png_file(df, 'src_port', 'Top source ports', 'sport.png')
     plot_pie_png_file(df, 'dst_port', 'Top destination ports', 'dport.png')
     src_ip, dst_ip, src_ports, dst_ports = info_tables(df)
-    createPDF(stats)
+    createPDF(stats, src_ip, dst_ip, src_ports, dst_ports)
     return render_template('stats.html', pcap_stats = stats, src_ip_list = src_ip, dst_ip_list = dst_ip, src_port_list = src_ports, dst_port_list = dst_ports)
 
 
