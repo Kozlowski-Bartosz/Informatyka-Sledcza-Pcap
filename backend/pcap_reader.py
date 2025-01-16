@@ -1,7 +1,4 @@
-from scapy.all import rdpcap, IP, load_layer
-from scapy.layers import http
-from scapy.layers.tls.handshake import TLSClientHello
-from scapy.layers.tls.extensions import TLS_Ext_ServerName
+from scapy.all import rdpcap
 from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -96,35 +93,3 @@ def info_tables(df):
     dst_port_list = dst_port_count.to_dict(orient='records')
 
     return src_ip_count, dst_ip_count, src_port_count, dst_port_list
-
-
-def seek_https_requests(pcap_packets):
-    load_layer("tls")
-    url_list = []
-    try:
-        packets = rdpcap(pcap_packets)
-    except AttributeError:
-        return url_list
-
-    for packet in packets:
-        if packet.haslayer(http.HTTPRequest):
-            http_layer = packet.getlayer(http.HTTPRequest)
-            ip_layer = packet.getlayer(IP)
-            # url = ('\n{} just requested a {} {}{}'.format(
-            #     ip_layer.fields['src'],
-            #     http_layer.fields['Method'].decode('utf-8'),
-            #     http_layer.fields['Host'].decode('utf-8'),
-            #     http_layer.fields['Path'].decode('utf-8')))
-            url = ('\n HTTP request: {}{}'.format(
-                http_layer.fields['Host'].decode('utf-8'),
-                http_layer.fields['Path'].decode('utf-8')))
-            url_list.append(url)
-        elif packet.haslayer(TLSClientHello):
-            exts = packet[TLSClientHello].ext
-            for ext in exts:
-                if isinstance(ext, TLS_Ext_ServerName):
-                    server_names = ext.servernames
-                    if server_names:
-                        url = f" HTTPS request (SNI): {server_names[0].servername.decode()}"
-                        url_list.append(url)
-    return url_list

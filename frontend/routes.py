@@ -4,11 +4,11 @@ from backend.pcap_reader import (
     read_packets,
     packets_to_df,
     plot_pie_png_file,
-    seek_https_requests,
     pcap_statistics,
     info_tables
 )
 from backend.extractor import (
+    extract_https_requests,
     extract_images_from_http,
     extract_authentication_data_from_http,
     extract_ftp_credentials,
@@ -95,7 +95,7 @@ def stats():
 def extracted():
     current_app.logger.debug("Extracted route")
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
-    http_request_data = seek_https_requests(pcap_file_path)
+    http_request_data = extract_https_requests(pcap_file_path)
     images = extract_images_from_http(pcap_file_path)
     cred = extract_authentication_data_from_http(pcap_file_path)
     ftp_cred = extract_ftp_credentials(pcap_file_path)
