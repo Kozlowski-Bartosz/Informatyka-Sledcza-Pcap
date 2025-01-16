@@ -111,9 +111,12 @@ def seek_https_requests(pcap_packets):
         if packet.haslayer(http.HTTPRequest):
             http_layer = packet.getlayer(http.HTTPRequest)
             ip_layer = packet.getlayer(IP)
-            url = ('\n{} just requested a {} {}{}'.format(
-                ip_layer.fields['src'],
-                http_layer.fields['Method'].decode('utf-8'),
+            # url = ('\n{} just requested a {} {}{}'.format(
+            #     ip_layer.fields['src'],
+            #     http_layer.fields['Method'].decode('utf-8'),
+            #     http_layer.fields['Host'].decode('utf-8'),
+            #     http_layer.fields['Path'].decode('utf-8')))
+            url = ('\n HTTP request: {}{}'.format(
                 http_layer.fields['Host'].decode('utf-8'),
                 http_layer.fields['Path'].decode('utf-8')))
             url_list.append(url)
@@ -123,6 +126,6 @@ def seek_https_requests(pcap_packets):
                 if isinstance(ext, TLS_Ext_ServerName):
                     server_names = ext.servernames
                     if server_names:
-                        url = f" Server Name Indication (SNI): {server_names[0].servername.decode()}"
+                        url = f" HTTPS request (SNI): {server_names[0].servername.decode()}"
                         url_list.append(url)
     return url_list
