@@ -45,7 +45,7 @@ def uploadFile():
 
         data_filename = secure_filename(f.filename)
 
-        if not data_filename.lower().endswith('.pcap,') and not data_filename.lower().endswith('.cap'):
+        if not data_filename.lower().endswith('.pcap') and not data_filename.lower().endswith('.cap'):
             flash("That's not a .pcap!")
             return redirect('/')
 
