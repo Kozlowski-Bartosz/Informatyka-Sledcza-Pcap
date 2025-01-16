@@ -44,17 +44,17 @@
         }
 
         $('#save-visible-rows').click(function() {
-        var visibleRowsData = [];
-        $('#data-table tr:visible').each(function() {
-            var rowData = $(this).find('td').map(function() {
-                return $(this).text();
-            }).get().join('\t');  // Collects text from each cell separated by a tab
-            visibleRowsData.push(rowData);
-        });
-        
-        $.post('/save', {data: visibleRowsData.join('\n')}, function(response) {
-            alert('Data saved successfully to output/results/filtered_packets.txt');
-        });
+            var visibleRowsData = [];
+            $('#data-table tr:visible').each(function() {
+                var rowData = $(this).find('td').map(function() {
+                    return $(this).text().replace(/\t/g, '').replace(/\n/g, '');  // Strips tabs and newlines
+                }).get().join('\t');  // Collects text from each cell separated by a tab
+                visibleRowsData.push(rowData);
+            });
+
+            $.post('/save', {data: visibleRowsData.join('\n')}, function(response) {  // Joins all rows with a space
+                alert('Data saved successfully to output/results/filtered_packets.txt');
+            });
     });
 });
     </script>
