@@ -1,5 +1,4 @@
 from fpdf import FPDF
-import pandas as pd
 
 class PDF(FPDF):
     def header(self):
@@ -55,7 +54,7 @@ class PDF(FPDF):
                 self.cell(col_width, 6, str(value), border=1, align="C")
             self.ln()
 
-def createPDF(stats, src_ip, dst_ip, src_ports, dst_ports):
+def create_pdf(stats, src_ip, dst_ip, src_ports, dst_ports):
     pdf = PDF()
     pdf.add_page()
   
