@@ -25,6 +25,14 @@ logger = logging.getLogger(__name__)
 
 main_bp = Blueprint('main', __name__)
 
+def is_pcap_file_by_header(filename):
+    try:
+        with open(filename, 'rb') as f:
+            header = f.read(4)
+            # Check for common pcap magic numbers
+            return header in (b'\xd4\xc3\xb2\xa1', b'\xa1\xb2\xc3\xd4')
+    except IOError:
+        return False
 
 @main_bp.route('/')
 def index():
@@ -48,8 +56,13 @@ def uploadFile():
         f.save(os.path.join(
             current_app.config['UPLOAD_FOLDER'], data_filename))
 
-        session['uploaded_pcap_file_path'] = os.path.join(
-            current_app.config['UPLOAD_FOLDER'], data_filename)
+        pcap_path = os.path.join(current_app.config['UPLOAD_FOLDER'], data_filename)
+
+        if not is_pcap_file_by_header(pcap_path):
+            flash("That's for sure not a .pcap!")
+            return redirect('/')
+
+        session['uploaded_pcap_file_path'] = pcap_path
 
         return redirect('/results')
     return render_template("index.html")
