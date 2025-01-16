@@ -106,7 +106,6 @@ def seek_https_requests(pcap_packets):
     except AttributeError:
         return url_list
 
-# TODO better result output
     for packet in packets:
         if packet.haslayer(http.HTTPRequest):
             http_layer = packet.getlayer(http.HTTPRequest)
