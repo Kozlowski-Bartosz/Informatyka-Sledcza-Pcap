@@ -28,16 +28,22 @@ class PDF(FPDF):
             for item in row:
                 self.cell(40, 10, item, border=1)
             self.ln()
+    def add_dict(self, data_dict):
+        self.set_font("Helvetica", size=12)
+        
+        for key, value in data_dict.items():
+            entry = f"{key}: {value}"
+            self.cell(0, 10, entry, ln=True)
 
-def createPDF():
+def createPDF(stats):
     # Create instance of PDF class
     pdf = PDF()
 
     # First page with headers
     pdf.add_page()
     pdf.set_font("Helvetica", size = 12)
-    pdf.cell(0, 10, "Statistics", align='C')
-
+    pdf.cell(0, 10, "Statistics", align='C', ln=1)
+    pdf.add_dict(stats)
     # Adding second page for images
     pdf.add_page()
     pdf.cell(0, 10, "Graphs", align='C')
