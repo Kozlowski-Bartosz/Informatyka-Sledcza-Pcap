@@ -68,6 +68,9 @@ def uploadFile():
 def results():
     current_app.logger.debug("Results route")
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
+    if not pcap_file_path:
+            flash("No data uploaded!")
+            return redirect('/')
     data = read_packets(pcap_file_path)
     return render_template('results.html', packet_data=data)
 
@@ -76,6 +79,9 @@ def results():
 def stats():
     current_app.logger.debug("Stats route")
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
+    if not pcap_file_path:
+            flash("No data uploaded!")
+            return redirect('/')
     df = packets_to_df(pcap_file_path)
     stats = pcap_statistics(df)
     plot_pie_png_file(df, 'source', 'Top source addresses', 'src.png')
@@ -90,6 +96,9 @@ def stats():
 def extracted():
     current_app.logger.debug("Extracted route")
     pcap_file_path = session.get('uploaded_pcap_file_path', None)
+    if not pcap_file_path:
+            flash("No data uploaded!")
+            return redirect('/')
     http_request_data = extract_https_requests(pcap_file_path)
     images = extract_images_from_http(pcap_file_path)
     cred = extract_authentication_data_from_http(pcap_file_path)
