@@ -69,6 +69,18 @@ def plot_pie_png_file(df, column, caption, file_name):
 
 def info_tables(df):
     df.replace('', pd.NA, inplace=True)
+    mac_address_regex = r'([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
+    df = df[~(df['source'].str.match(mac_address_regex) | df['destination'].str.match(mac_address_regex))]
+    
+    src_ip_count = df['source'].value_counts().reset_index()
+    src_ip_count.columns = ['Source IP', 'Count']  # Rename columns
+    src_ip_count = src_ip_count.sort_values(by='Count', ascending=False)
+    src_ip_count = src_ip_count.to_dict(orient='records')
+
+    dst_ip_count = df['destination'].value_counts().reset_index()
+    dst_ip_count.columns = ['Destination IP', 'Count']  # Rename columns
+    dst_ip_count = dst_ip_count.sort_values(by='Count', ascending=False)
+    dst_ip_count = dst_ip_count.to_dict(orient='records')
     
     src_port_count = df['src_port'].value_counts().reset_index()
     src_port_count.columns = ['Port Number', 'Count']  # Rename columns
@@ -80,7 +92,7 @@ def info_tables(df):
     dst_port_count = dst_port_count.sort_values(by='Count', ascending=False)
     dst_port_list = dst_port_count.to_dict(orient='records')
 
-    return src_port_count, dst_port_list
+    return src_ip_count, dst_ip_count, src_port_count, dst_port_list
 
 
 def seek_https_requests(pcap_packets):
