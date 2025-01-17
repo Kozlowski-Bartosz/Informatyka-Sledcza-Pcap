@@ -68,7 +68,6 @@
         No FTP credentials found
     {% endif %}
 
-    <!-- TODO: handle output of various file types. For now it only prints files paths -->
     <h1>Extracted FTP Files</h1>
     {% if ftp_files_list %}
         <table style="width: 75%">
@@ -94,7 +93,6 @@
         <img src="{{ url_for('main.output_images', filename=image_filename.split('/')[-1]) }}" alt="Extracted Image" style="max-width: 500px; padding: 20px; background:#ddd">
         {% endfor %}
         </div>
-        <!-- todo: prettify -->
         </div>
     {% else %}
         No images found
